@@ -7,7 +7,7 @@ const ProductPage = async ({
 }: {
   params: { productId: string, storeId: string }
 }) => {
-  const product = await prismadb.product.findUnique({
+  const product = params.productId.length === 3 ? null : await prismadb.product.findUnique({
     where: {
       id: params.productId,
     },
@@ -28,6 +28,18 @@ const ProductPage = async ({
     },
   });
 
+  const kitchens = await prismadb.kitchen.findMany({
+    where: {
+      storeId: params.storeId,
+    },
+  });
+
+  const cuisines = await prismadb.cuisine.findMany({
+    where: {
+      storeId: params.storeId,
+    },
+  });
+
   const colors = await prismadb.color.findMany({
     where: {
       storeId: params.storeId,
@@ -41,6 +53,8 @@ const ProductPage = async ({
           categories={categories} 
           colors={colors}
           sizes={sizes}
+          kitchens={kitchens}
+          cuisines={cuisines}
           initialData={product}
         />
       </div>

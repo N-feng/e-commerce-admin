@@ -34,6 +34,16 @@ export function MainNav({
       active: pathname === `/${params.storeId}/sizes`,
     },
     {
+      href: `/${params.storeId}/kitchens`,
+      label: 'Kitchens',
+      active: pathname === `/${params.storeId}/kitchens`,
+    },
+    {
+      href: `/${params.storeId}/cuisines`,
+      label: 'Cuisines',
+      active: pathname === `/${params.storeId}/cuisines`,
+    },
+    {
       href: `/${params.storeId}/colors`,
       label: 'Colors',
       active: pathname === `/${params.storeId}/colors`,

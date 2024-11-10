@@ -12,7 +12,7 @@ export async function POST(
 
     const body = await req.json();
 
-    const { name, price, categoryId, colorId, sizeId, images, isFeatured, isArchived } = body;
+    const { name, price, categoryId, colorId, sizeId, images, isFeatured, isArchived, kitchenId, cuisineId } = body;
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
@@ -34,9 +34,9 @@ export async function POST(
       return new NextResponse("Category id is required", { status: 400 });
     }
 
-    if (!colorId) {
-      return new NextResponse("Color id is required", { status: 400 });
-    }
+    // if (!colorId) {
+    //   return new NextResponse("Color id is required", { status: 400 });
+    // }
 
     if (!sizeId) {
       return new NextResponse("Size id is required", { status: 400 });
@@ -64,8 +64,10 @@ export async function POST(
         isFeatured,
         isArchived,
         categoryId,
-        colorId,
+        // colorId,
         sizeId,
+        kitchenId,
+        cuisineId,
         storeId: params.storeId,
         images: {
           createMany: {
@@ -103,7 +105,7 @@ export async function GET(
       where: {
         storeId: params.storeId,
         categoryId,
-        colorId,
+        // colorId,
         sizeId,
         isFeatured: isFeatured ? true : undefined,
         isArchived: false,
@@ -111,7 +113,7 @@ export async function GET(
       include: {
         images: true,
         category: true,
-        color: true,
+        // color: true,
         size: true,
       },
       orderBy: {

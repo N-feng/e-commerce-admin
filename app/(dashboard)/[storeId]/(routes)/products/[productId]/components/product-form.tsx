@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
 import { Trash } from "lucide-react"
-import { Category, Color, Image, Product, Size } from "@prisma/client"
+import { Category, Color, Cuisine, Image, Kitchen, Product, Size } from "@prisma/client"
 import { useParams, useRouter } from "next/navigation"
 
 import { Input } from "@/components/ui/input"
@@ -26,6 +26,7 @@ import { Heading } from "@/components/ui/heading"
 import { AlertModal } from "@/components/modals/alert-modal"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import ImageUpload from "@/components/image-upload"
+import { MultiUploader } from "@/components/mulit-uploader"
 import { Checkbox } from "@/components/ui/checkbox"
 
 const formSchema = z.object({
@@ -33,8 +34,10 @@ const formSchema = z.object({
   images: z.object({ url: z.string() }).array(),
   price: z.coerce.number().min(1),
   categoryId: z.string().min(1),
-  colorId: z.string().min(1),
+  // colorId: z.string().min(1),
   sizeId: z.string().min(1),
+  kitchenId: z.string().min(1),
+  cuisineId: z.string().min(1),
   isFeatured: z.boolean().default(false).optional(),
   isArchived: z.boolean().default(false).optional()
 });
@@ -48,12 +51,16 @@ interface ProductFormProps {
   categories: Category[];
   colors: Color[];
   sizes: Size[];
+  kitchens: Kitchen[];
+  cuisines: Cuisine[];
 };
 
 export const ProductForm: React.FC<ProductFormProps> = ({
   initialData,
   categories,
   sizes,
+  kitchens,
+  cuisines,
   colors
 }) => {
   const params = useParams();
@@ -150,7 +157,13 @@ export const ProductForm: React.FC<ProductFormProps> = ({
               <FormItem>
                 <FormLabel>Images</FormLabel>
                 <FormControl>
-                  <ImageUpload 
+                  {/* <ImageUpload 
+                    value={field.value.map((image) => image.url)} 
+                    disabled={loading} 
+                    onChange={(url) => field.onChange([...field.value, { url }])}
+                    onRemove={(url) => field.onChange([...field.value.filter((current) => current.url !== url)])}
+                  /> */}
+                  <MultiUploader 
                     value={field.value.map((image) => image.url)} 
                     disabled={loading} 
                     onChange={(url) => field.onChange([...field.value, { url }])}
@@ -232,7 +245,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name="colorId"
               render={({ field }) => (
@@ -247,6 +260,50 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     <SelectContent>
                       {colors.map((color) => (
                         <SelectItem key={color.id} value={color.id}>{color.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            /> */}
+            <FormField
+              control={form.control}
+              name="kitchenId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Kitchen</FormLabel>
+                  <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue defaultValue={field.value} placeholder="Select a kitchen" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {kitchens.map((kitchen) => (
+                        <SelectItem key={kitchen.id} value={kitchen.id}>{kitchen.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="cuisineId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Cuisine</FormLabel>
+                  <Select disabled={loading} onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue defaultValue={field.value} placeholder="Select a cuisine" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {cuisines.map((cuisine) => (
+                        <SelectItem key={cuisine.id} value={cuisine.id}>{cuisine.name}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>

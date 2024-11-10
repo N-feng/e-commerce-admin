@@ -3,13 +3,16 @@
 // import { CldUploadWidget } from 'next-cloudinary';
 import { twMerge } from 'tailwind-merge'
 import { UploadButton, UploadDropzone } from "@/lib/uploadthing";
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { ImagePlus, Trash } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { useDropzone } from '@uploadthing/react';
+import { useUploadThing } from "@/lib/uploadthing";
+import { generateClientDropzoneAccept } from "uploadthing/client";
 
 interface ImageUploadProps {
   disabled?: boolean;
@@ -18,13 +21,48 @@ interface ImageUploadProps {
   value: string[];
 }
 
-const ImageUpload: React.FC<ImageUploadProps> = ({
+export const MultiUploader: React.FC<ImageUploadProps> = ({
   disabled,
   onChange,
   onRemove,
   value
 }) => {
   const [isMounted, setIsMounted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [progress, setProgress] = useState<number>(0);
+  
+  const [files, setFiles] = useState<File[]>([]);
+
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    setFiles(acceptedFiles);
+  }, []);
+
+  const { startUpload, routeConfig } = useUploadThing("imageUploader", {
+    onClientUploadComplete: (res) => {
+      const files: File[] = Array.from(res || []);
+
+      setIsLoading(false);
+
+      console.log("Files: ", res);
+      // alert("uploaded successfully!");
+      onUpload(res)
+    },
+    onUploadError: () => {
+      alert("error occurred while uploading");
+    },
+    onUploadBegin: (file) => {
+      console.log("upload has begun for", file);
+    },
+  });
+
+  const fileTypes = routeConfig
+    ? Object.keys(routeConfig)
+    : [];
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    accept: fileTypes ? generateClientDropzoneAccept(fileTypes) : undefined,
+  });
 
   useEffect(() => {
     setIsMounted(true);
@@ -72,41 +110,25 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           </div>
         </>
       ) : (
-        <main className="flex">
-          <UploadDropzone
-            className="bg-slate-800 ut-label:text-lg ut-allowed-content:ut-uploading:text-red-300"
-            endpoint="imageUploader"
-            onClientUploadComplete={(res) => {
-              // Do something with the response
-              console.log("Files: ", res);
-              // alert("Upload Completed");
-              onUpload(res)
-            }}
-            onUploadError={(error: Error) => {
-              // Do something with the error.
-              alert(`ERROR! ${error.message}`);
-            }}
-            config={{ cn: twMerge }}
-          />
+        <>
+          <div {...getRootProps()}>
+            <input {...getInputProps()} />
+            <div className="flex items-center justify-center h-48 border-2 border-gray-300 border-dashed rounded-md flex-col">
+              Drop files here!
+            </div>
+          </div>
 
-          {/* <UploadButton
-            endpoint="imageUploader"
-            onClientUploadComplete={(res) => {
-              // Do something with the response
-              console.log("Files: ", res);
-              // alert("Upload Completed");
-              onUpload(res)
-            }}
-            onUploadError={(error: Error) => {
-              // Do something with the error.
-              alert(`ERROR! ${error.message}`);
-            }}
-            config={{ cn: twMerge }}
-          /> */}
-        </main>
+          {files.length > 0 && (
+            <button
+              type="button"
+              className="p-2 bg-blue-500 text-white rounded"
+              onClick={() => startUpload(files)}
+            >
+              Upload {files.length} files
+            </button>
+          )}
+        </>
       )}
     </div>
   );
 }
- 
-export default ImageUpload;
