@@ -157,18 +157,22 @@ export const ProductForm: React.FC<ProductFormProps> = ({
               <FormItem>
                 <FormLabel>Images</FormLabel>
                 <FormControl>
-                  {/* <ImageUpload 
-                    value={field.value.map((image) => image.url)} 
-                    disabled={loading} 
-                    onChange={(url) => field.onChange([...field.value, { url }])}
-                    onRemove={(url) => field.onChange([...field.value.filter((current) => current.url !== url)])}
-                  /> */}
-                  <MultiUploader 
-                    value={field.value.map((image) => image.url)} 
-                    disabled={loading} 
-                    onChange={(url) => field.onChange([...field.value, { url }])}
-                    onRemove={(url) => field.onChange([...field.value.filter((current) => current.url !== url)])}
-                  />
+                  <>
+                    {/* <ImageUpload 
+                      value={field.value.map((image) => image.url)} 
+                      disabled={loading} 
+                      onChange={(url) => field.onChange([...field.value, { url }])}
+                      onRemove={(url) => field.onChange([...field.value.filter((current) => current.url !== url)])}
+                    /> */}
+                    <MultiUploader 
+                      value={field.value.map((image) => image.url)} 
+                      disabled={loading} 
+                      onChange={(urls) => {
+                        field.onChange(urls.map((url) => ({ url })));
+                      }}
+                      onRemove={(url) => field.onChange([...field.value.filter((current) => current.url !== url)])}
+                    />
+                  </>
                 </FormControl>
                 <FormMessage />
               </FormItem>

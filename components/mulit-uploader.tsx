@@ -13,10 +13,11 @@ import toast from 'react-hot-toast';
 import { useDropzone } from '@uploadthing/react';
 import { useUploadThing } from "@/lib/uploadthing";
 import { generateClientDropzoneAccept } from "uploadthing/client";
+import { Progress } from './ui/progress';
 
 interface ImageUploadProps {
   disabled?: boolean;
-  onChange: (value: string) => void;
+  onChange: (value: string[]) => void;
   onRemove: (value: string) => void;
   value: string[];
 }
@@ -25,7 +26,7 @@ export const MultiUploader: React.FC<ImageUploadProps> = ({
   disabled,
   onChange,
   onRemove,
-  value
+  value,
 }) => {
   const [isMounted, setIsMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -37,22 +38,31 @@ export const MultiUploader: React.FC<ImageUploadProps> = ({
     setFiles(acceptedFiles);
   }, []);
 
-  const { startUpload, routeConfig } = useUploadThing("imageUploader", {
+  const { startUpload, routeConfig } = useUploadThing("productImage", {
     onClientUploadComplete: (res) => {
-      const files: File[] = Array.from(res || []);
+      // const files: File[] = Array.from(res || []);
 
       setIsLoading(false);
 
       console.log("Files: ", res);
+      const newUrls = res.map((file) => {
+        return file.url;
+      })
       // alert("uploaded successfully!");
-      onUpload(res)
+      setProgress(0);
+      onChange([...value, ...newUrls])
     },
     onUploadError: () => {
       alert("error occurred while uploading");
     },
     onUploadBegin: (file) => {
       console.log("upload has begun for", file);
+      setIsLoading(true);
     },
+    onUploadProgress: (p) => {
+      console.log('p: ', p);
+      setProgress(p);
+    }
   });
 
   const fileTypes = routeConfig
@@ -67,12 +77,6 @@ export const MultiUploader: React.FC<ImageUploadProps> = ({
   useEffect(() => {
     setIsMounted(true);
   }, []);
-
-  const onUpload = (result: any) => {
-    // onChange(result.info.secure_url);
-
-    onChange(result[0].url)
-  };
 
   const onDelete = async (url: string) => {
     onRemove(url);
@@ -119,13 +123,16 @@ export const MultiUploader: React.FC<ImageUploadProps> = ({
           </div>
 
           {files.length > 0 && (
-            <button
-              type="button"
-              className="p-2 bg-blue-500 text-white rounded"
-              onClick={() => startUpload(files)}
-            >
-              Upload {files.length} files
-            </button>
+            <>
+              <Progress value={progress} className="mt-5" />
+              <button
+                type="button"
+                className="p-2 bg-blue-500 text-white rounded mt-5"
+                onClick={() => startUpload(files)}
+              >
+                Upload {files.length} files
+              </button>
+            </>
           )}
         </>
       )}
