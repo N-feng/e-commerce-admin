@@ -112,7 +112,7 @@ model Size {
   storeId     String    @db.ObjectId // Foreign Key to Store
   store       Store     @relation("StoreToSize", fields: [storeId], references: [id])
   name        String
-  value       String
+  value       Int
   products    Product[] // Relation to Product model
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt

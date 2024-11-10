@@ -7,7 +7,7 @@ const SizePage = async ({
 }: {
   params: { sizeId: string }
 }) => {
-  const size = await prismadb.size.findUnique({
+  const size = params.sizeId.length === 3 ? null : await prismadb.size.findUnique({
     where: {
       id: params.sizeId
     }

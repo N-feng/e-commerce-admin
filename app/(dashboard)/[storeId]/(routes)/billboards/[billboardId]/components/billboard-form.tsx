@@ -79,6 +79,9 @@ export const BillboardForm: React.FC<BillboardFormProps> = ({
   const onDelete = async () => {
     try {
       setLoading(true);
+      const {imageUrl} = form.getValues()
+      console.log('imageUrl: ', imageUrl);
+      await axios.post('/api/servers/deleteImage', { imageUrl });
       await axios.delete(`/api/${params.storeId}/billboards/${params.billboardId}`);
       router.refresh();
       router.push(`/${params.storeId}/billboards`);
@@ -93,12 +96,12 @@ export const BillboardForm: React.FC<BillboardFormProps> = ({
 
   return (
     <>
-    <AlertModal 
-      isOpen={open} 
-      onClose={() => setOpen(false)}
-      onConfirm={onDelete}
-      loading={loading}
-    />
+      <AlertModal 
+        isOpen={open} 
+        onClose={() => setOpen(false)}
+        onConfirm={onDelete}
+        loading={loading}
+      />
      <div className="flex items-center justify-between">
         <Heading title={title} description={description} />
         {initialData && (

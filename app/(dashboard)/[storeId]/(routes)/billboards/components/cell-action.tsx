@@ -33,6 +33,7 @@ export const CellAction: React.FC<CellActionProps> = ({
   const onConfirm = async () => {
     try {
       setLoading(true);
+      await axios.post('/api/servers/deleteImage', { imageUrl: data.imageUrl });
       await axios.delete(`/api/${params.storeId}/billboards/${data.id}`);
       toast.success('Billboard deleted.');
       router.refresh();
