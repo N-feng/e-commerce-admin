@@ -1,11 +1,19 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 
 import prismadb from "@/lib/prismadb";
 
 export async function GET(
   req: Request,
-  { params }: { params: { productId: string } }
+  { params }: { 
+    params: { 
+      categoryId: string,
+      sizeId: string,
+      kitchenId: string,
+      cuisineId: string,
+      productId: string, 
+    } 
+  }
 ) {
   try {
     if (!params.productId) {
@@ -14,13 +22,19 @@ export async function GET(
 
     const product = await prismadb.product.findUnique({
       where: {
-        id: params.productId
+        categoryId: params.categoryId,
+        sizeId: params.sizeId,
+        kitchenId: params.kitchenId,
+        cuisineId: params.cuisineId,
+        id: params.productId,
       },
       include: {
         images: true,
         category: true,
         size: true,
-        color: true,
+        // kitchen: true,
+        // cuisine: true,
+        // color: true,
       }
     });
   
@@ -106,9 +120,9 @@ export async function PATCH(
       return new NextResponse("Category id is required", { status: 400 });
     }
 
-    if (!colorId) {
-      return new NextResponse("Color id is required", { status: 400 });
-    }
+    // if (!colorId) {
+    //   return new NextResponse("Color id is required", { status: 400 });
+    // }
 
     if (!sizeId) {
       return new NextResponse("Size id is required", { status: 400 });
@@ -133,7 +147,7 @@ export async function PATCH(
         name,
         price,
         categoryId,
-        colorId,
+        // colorId,
         sizeId,
         images: {
           deleteMany: {},

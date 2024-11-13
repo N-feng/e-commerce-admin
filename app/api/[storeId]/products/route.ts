@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs';
+import { auth } from '@clerk/nextjs/server';
 
 import prismadb from '@/lib/prismadb';
 
@@ -88,13 +88,23 @@ export async function POST(
 
 export async function GET(
   req: Request,
-  { params }: { params: { storeId: string } },
+  { params }: { 
+    params: { 
+      categoryId: string,
+      sizeId: string,
+      kitchenId: string,
+      cuisineId: string,
+      storeId: string,
+    } 
+  },
 ) {
   try {
     const { searchParams } = new URL(req.url)
     const categoryId = searchParams.get('categoryId') || undefined;
-    const colorId = searchParams.get('colorId') || undefined;
     const sizeId = searchParams.get('sizeId') || undefined;
+    const kitchenId = searchParams.get('kitchenId') || undefined;
+    const cuisineId = searchParams.get('cuisineId') || undefined;
+    const colorId = searchParams.get('colorId') || undefined;
     const isFeatured = searchParams.get('isFeatured');
 
     if (!params.storeId) {
@@ -107,12 +117,16 @@ export async function GET(
         categoryId,
         // colorId,
         sizeId,
+        kitchenId,
+        cuisineId,
         isFeatured: isFeatured ? true : undefined,
         isArchived: false,
       },
       include: {
         images: true,
         category: true,
+        // kitchen: true,
+        // cuisine: true,
         // color: true,
         size: true,
       },
