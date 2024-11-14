@@ -88,7 +88,7 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
           </CardContent>
         </Card> */}
         <div className="grid gap-4 grid-cols-4">
-          {/* <Card className="col-span-2">
+          <Card className="col-span-2">
             <CardHeader className="flex items-center justify-between flex-row">
               <CardTitle className="text-sm font-medium">
                 Total Revenue
@@ -102,7 +102,7 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
             </CardContent>
           </Card>
 
-          <Card className="col-span-1">
+          {/* <Card className="col-span-1">
             <CardHeader className="flex items-center justify-between flex-row">
               <CardTitle className="text-sm font-medium">Sales</CardTitle>
               <DollarSign className="w-4 h-4 text-muted-foreground" />

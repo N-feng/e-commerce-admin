@@ -43,9 +43,9 @@ export const getOrderTotalRevenueByCategory = async (storeId: string) => {
         let revenueForItem = 0;
 
         if (item.product.qty !== undefined) {
-          revenueForItem = item.product.price * item.product.qty;
+          revenueForItem = Number(item.product.price) * item.product.qty;
         } else {
-          revenueForItem = item.product.price;
+          revenueForItem = Number(item.product.price);
         }
 
         categoryRevenue[category.name] =

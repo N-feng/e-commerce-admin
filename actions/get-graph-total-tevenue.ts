@@ -40,9 +40,9 @@ export const getGraphTotalRevenue = async (storeId: string) => {
 
       for (const item of order.orderItems) {
         if (item.product.qty !== undefined) {
-          revenueForOrder += item.product.price * item.product.qty;
+          revenueForOrder += Number(item.product.price) * item.product.qty;
         } else {
-          revenueForOrder += item.product.price;
+          revenueForOrder += Number(item.product.price);
         }
       }
 
