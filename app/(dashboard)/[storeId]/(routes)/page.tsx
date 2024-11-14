@@ -25,18 +25,18 @@ interface DashboardPageProps {
 const DashboardPage: React.FC<DashboardPageProps> = async ({ 
   params
 }) => {
-  // const totalRevenue = await getTotalRevenue(params.storeId);
-  // const totalSales = await getTotalSales(params.storeId);
-  // const totalProducts = await getTotalProducts(params.storeId);
+  const totalRevenue = await getTotalRevenue(params.storeId);
+  const totalSales = await getTotalSales(params.storeId);
+  const totalProducts = await getTotalProducts(params.storeId);
 
-  // const monthlyGraphRevenue = await getGraphTotalRevenue(params.storeId);
-  // const revenueByOrderStatus = await getOrderStatusTotalRevenue(params.storeId);
-  // const revenueBycategory = await getOrderTotalRevenueByCategory(
-  //   params.storeId
-  // );
-  // const orderStatusTotalRevenue = await getOrderPaymentStatusTotalRevenue(
-  //   params.storeId
-  // );
+  const monthlyGraphRevenue = await getGraphTotalRevenue(params.storeId);
+  const revenueByOrderStatus = await getOrderStatusTotalRevenue(params.storeId);
+  const revenueBycategory = await getOrderTotalRevenueByCategory(
+    params.storeId
+  );
+  const orderStatusTotalRevenue = await getOrderPaymentStatusTotalRevenue(
+    params.storeId
+  );
 
   // const totalRevenue = await getTotalRevenue(params.storeId);
   // const graphRevenue = await getGraphRevenue(params.storeId);
@@ -87,7 +87,7 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
             <Overview data={graphRevenue} />
           </CardContent>
         </Card> */}
-        {/* <div className="grid gap-4 grid-cols-4">
+        <div className="grid gap-4 grid-cols-4">
           <Card className="col-span-2">
             <CardHeader className="flex items-center justify-between flex-row">
               <CardTitle className="text-sm font-medium">
@@ -122,7 +122,7 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
             </CardContent>
           </Card>
 
-          <Card className="col-span-3">
+          {/* <Card className="col-span-3">
             <CardHeader className="flex items-center justify-between flex-row">
               <CardTitle className="text-sm font-medium">
                 Revenue By Month
@@ -168,8 +168,8 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
             <CardContent>
               <Overview data={revenueByOrderStatus} />
             </CardContent>
-          </Card>
-        </div> */}
+          </Card> */}
+        </div>
       </div>
     </div>
   );
