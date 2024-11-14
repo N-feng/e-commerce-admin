@@ -5,21 +5,21 @@ export const getTotalSales = async (storeId: string) => {
     where: {
       storeId: storeId,
     },
-    include: {
-      orderItems: {
-        include: {
-          product: {
-            include: {
-              images: true,
-              category: true,
-            }
-          }
-        }
-      },
-    },
-    orderBy: {
-      createdAt: 'desc',
-    }
+    // include: {
+    //   orderItems: {
+    //     include: {
+    //       product: {
+    //         include: {
+    //           images: true,
+    //           category: true,
+    //         }
+    //       }
+    //     }
+    //   },
+    // },
+    // orderBy: {
+    //   createdAt: 'desc',
+    // }
   });
 
   const count = ordersData.length;

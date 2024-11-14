@@ -5,17 +5,17 @@ export const getTotalProducts = async (storeId: string) => {
     where: {
       storeId: storeId,
     },
-    include: {
-      images: true,
-      category: true,
-      // kitchen: true,
-      // cuisine: true,
-      // color: true,
-      size: true,
-    },
-    orderBy: {
-      createdAt: 'desc',
-    }
+    // include: {
+    //   images: true,
+    //   category: true,
+    //   kitchen: true,
+    //   cuisine: true,
+    //   color: true,
+    //   size: true,
+    // },
+    // orderBy: {
+    //   createdAt: 'desc',
+    // }
   });
 
   const count = productsData.length;
