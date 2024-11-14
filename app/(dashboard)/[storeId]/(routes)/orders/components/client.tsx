@@ -4,10 +4,10 @@ import { DataTable } from "@/components/ui/data-table";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 
-import { columns, OrderColumn } from "./columns";
+import { columns, OrdersColumns } from "./columns";
 
 interface OrderClientProps {
-  data: OrderColumn[];
+  data: OrdersColumns[];
 }
 
 export const OrderClient: React.FC<OrderClientProps> = ({
