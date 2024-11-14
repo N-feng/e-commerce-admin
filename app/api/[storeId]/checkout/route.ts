@@ -32,7 +32,7 @@ export async function POST(
           name: item.name,
         },
         // unit_amount: item.price.toNumber() * 100
-        unit_amount: item.price * 100
+        unit_amount: Number(item.price) * 100
       }
     });
   });
