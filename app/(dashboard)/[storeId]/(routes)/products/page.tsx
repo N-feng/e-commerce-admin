@@ -32,7 +32,8 @@ const ProductsPage = async ({
     name: item.name,
     isFeatured: item.isFeatured,
     isArchived: item.isArchived,
-    price: formatter.format(Number(item.price)),
+    // price: formatter.format(Number(item.price)),
+    price: item.price,
     category: item.category.name,
     size: item.size.name,
     // color: item.color.value,
@@ -40,6 +41,7 @@ const ProductsPage = async ({
     cuisine: item.cuisine.value,
     createdAt: format(item.createdAt, 'MMMM do, yyyy'),
   }));
+    console.log('formattedProducts: ', formattedProducts);
 
   return (
     <div className="flex-col">
