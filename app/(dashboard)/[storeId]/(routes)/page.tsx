@@ -26,8 +26,8 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
   params
 }) => {
   const totalRevenue = await getTotalRevenue(params.storeId);
-  const totalSales = await getTotalSales(params.storeId);
-  const totalProducts = await getTotalProducts(params.storeId);
+  // const totalSales = await getTotalSales(params.storeId);
+  // const totalProducts = await getTotalProducts(params.storeId);
 
   // const monthlyGraphRevenue = await getGraphTotalRevenue(params.storeId);
   // const revenueByOrderStatus = await getOrderStatusTotalRevenue(params.storeId);
@@ -102,7 +102,7 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
             </CardContent>
           </Card>
 
-          <Card className="col-span-1">
+          {/* <Card className="col-span-1">
             <CardHeader className="flex items-center justify-between flex-row">
               <CardTitle className="text-sm font-medium">Sales</CardTitle>
               <DollarSign className="w-4 h-4 text-muted-foreground" />
@@ -120,7 +120,7 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
             <CardContent>
               <div className="text-2xl font-bold">+{totalProducts}</div>
             </CardContent>
-          </Card>
+          </Card> */}
 
           {/* <Card className="col-span-3">
             <CardHeader className="flex items-center justify-between flex-row">
