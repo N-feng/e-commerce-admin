@@ -107,6 +107,7 @@ export async function GET(
     const cuisineId = searchParams.get('cuisineId') || undefined;
     const colorId = searchParams.get('colorId') || undefined;
     const isFeatured = searchParams.get('isFeatured');
+    const isArchived = searchParams.get('isArchived');
 
     if (!params.storeId) {
       return new NextResponse("Store id is required", { status: 400 });
@@ -121,7 +122,7 @@ export async function GET(
         kitchenId,
         cuisineId,
         isFeatured: isFeatured ? true : undefined,
-        isArchived: false,
+        isArchived: isArchived ? true : undefined,
       },
       include: {
         images: true,
