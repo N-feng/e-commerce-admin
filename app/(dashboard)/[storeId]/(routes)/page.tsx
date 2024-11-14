@@ -29,14 +29,14 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
   const totalSales = await getTotalSales(params.storeId);
   const totalProducts = await getTotalProducts(params.storeId);
 
-  const monthlyGraphRevenue = await getGraphTotalRevenue(params.storeId);
-  const revenueByOrderStatus = await getOrderStatusTotalRevenue(params.storeId);
-  const revenueBycategory = await getOrderTotalRevenueByCategory(
-    params.storeId
-  );
-  const orderStatusTotalRevenue = await getOrderPaymentStatusTotalRevenue(
-    params.storeId
-  );
+  // const monthlyGraphRevenue = await getGraphTotalRevenue(params.storeId);
+  // const revenueByOrderStatus = await getOrderStatusTotalRevenue(params.storeId);
+  // const revenueBycategory = await getOrderTotalRevenueByCategory(
+  //   params.storeId
+  // );
+  // const orderStatusTotalRevenue = await getOrderPaymentStatusTotalRevenue(
+  //   params.storeId
+  // );
 
   // const totalRevenue = await getTotalRevenue(params.storeId);
   // const graphRevenue = await getGraphRevenue(params.storeId);
