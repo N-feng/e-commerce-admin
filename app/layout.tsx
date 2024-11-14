@@ -28,12 +28,13 @@ export default function RootLayout({
       <html lang="en" suppressHydrationWarning>
         <body
           className={poppins.className}
-          suppressHydrationWarning
+          
         >
           <ThemeProvider 
             attribute="class" 
             defaultTheme="system" 
             enableSystem
+            disableTransitionOnChange
           >
             <ToastProvider />
             <ModalProvider />
