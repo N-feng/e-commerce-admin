@@ -66,6 +66,7 @@ model Product {
   category    Category  @relation("CategoryToProduct", fields: [categoryId], references: [id])
   name        String
   price       Float
+  qty         Int
   isFeatured  Boolean   @default(false)
   isArchived  Boolean   @default(false)
   sizeId      String    @db.ObjectId // Foreign Key to Size
@@ -99,6 +100,8 @@ model Order {
   address    String    @default("")
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  order_status String @default("")
+  userId String @default("")
 
   @@index([storeId])
 }

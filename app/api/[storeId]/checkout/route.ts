@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 import { stripe } from "@/lib/stripe";
 import prismadb from "@/lib/prismadb";
+import { Product } from "@prisma/client";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -18,48 +19,41 @@ export async function POST(
   req: Request,
   { params }: { params: { storeId: string } }
 ) {
-  const { productIds } = await req.json();
-
-  if (!productIds || productIds.length === 0) {
-    return new NextResponse("Product ids are required", { status: 400 });
-  }
-
-  const products = await prismadb.product.findMany({
-    where: {
-      id: {
-        in: productIds
-      }
-    }
-  });
+  const { products, userId } = await req.json();
 
   const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
 
-  products.forEach((product) => {
+  products.forEach((item: Product) => {
     line_items.push({
       quantity: 1,
       price_data: {
         currency: 'USD',
         product_data: {
-          name: product.name,
+          name: item.name,
         },
-        unit_amount: product.price.toNumber() * 100
+        // unit_amount: item.price.toNumber() * 100
+        unit_amount: item.price * 100
       }
     });
   });
 
   const order = await prismadb.order.create({
     data: {
-      storeId: params.storeId,
       isPaid: false,
+      // orderItems: products,
       orderItems: {
-        create: productIds.map((productId: string) => ({
+        create: products.map((item: Product) => ({
           product: {
             connect: {
-              id: productId
+              id: item.id
             }
           }
         }))
-      }
+      },
+      userId,
+      order_status: "Processing",
+      // createdAt: serverTimestamp(),
+      storeId: params.storeId,
     }
   });
 
@@ -67,13 +61,17 @@ export async function POST(
     line_items,
     mode: 'payment',
     billing_address_collection: 'required',
+    shipping_address_collection: {
+      allowed_countries: ["US", "CA", "GB", "AU", "IN"]
+    },
     phone_number_collection: {
       enabled: true,
     },
     success_url: `${process.env.FRONTEND_STORE_URL}/cart?success=1`,
     cancel_url: `${process.env.FRONTEND_STORE_URL}/cart?canceled=1`,
     metadata: {
-      orderId: order.id
+      orderId: order.id,
+      storeId: params.storeId,
     },
   });
 
