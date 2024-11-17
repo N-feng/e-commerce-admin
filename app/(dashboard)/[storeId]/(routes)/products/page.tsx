@@ -40,7 +40,6 @@ const ProductsPage = async ({
     cuisine: item.cuisine.value,
     createdAt: format(item.createdAt, 'MMMM do, yyyy'),
   }));
-    console.log('formattedProducts: ', formattedProducts);
 
   return (
     <div className="flex-col">

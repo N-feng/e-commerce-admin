@@ -18,16 +18,18 @@ model Store {
   id              String    @id @default(auto()) @map("_id") @db.ObjectId
   name            String
   userId          String
-  billboards      Billboard[] @relation("StoreToBillboard")
-  categories      Category[] @relation("StoreToCategory")
-  products        Product[]  @relation("StoreToProduct")
-  sizes           Size[]     @relation("StoreToSize")
+  billboards      Billboard[]   @relation("StoreToBillboard")
+  categories      Category[]    @relation("StoreToCategory")
+  products        Product[]     @relation("StoreToProduct")
+  sizes           Size[]        @relation("StoreToSize")
   kitchens        Kitchen[]     @relation("StoreToKitchen")
   cuisines        Cuisine[]     @relation("StoreToCuisine")
-  colors          Color[]     @relation("StoreToColor")
-  orders          Order[]     @relation("StoreToOrder")
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
+  colors          Color[]       @relation("StoreToColor")
+  orders          Order[]       @relation("StoreToOrder")
+  recipes         Recipe[]      @relation("StoreToRecipe")
+  meals           Meal[]        @relation("StoreToMeal")
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
 }
 
 model Billboard {
@@ -79,8 +81,40 @@ model Product {
   // color       Color     @relation(fields: [colorId], references: [id])
   images      Image[]   // Relation to Image model
   orderItems  OrderItem[]   // Relation to Order model
+  recipeItems RecipeItem[]  // Relation to Recipe model
+  meals       MealItem[]  // Relation to Meal model
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+
+  // Attribute
+  energy        String
+  carbohydrates String
+  sugars        String
+  dietaryFiber  String
+  fat           String
+  protein       String
+
+  // Vitamins
+  vitaminA          String
+  thiamineB1        String
+  riboflavinB2      String
+  niacinB3          String
+  pantothenicAcidB5 String
+  vitaminB6         String
+  folateB9          String
+  vitaminC          String
+  vitaminE          String
+  vitaminK          String
+
+  // Minerals
+  calcium     String
+  iron        String
+  magnesium   String
+  manganese   String
+  phosphorus  String
+  potassium   String
+  sodium      String
+  zinc        String
 
   @@index([storeId])
   @@index([categoryId])
@@ -115,6 +149,59 @@ model OrderItem {
   product   Product @relation(fields: [productId], references: [id])
 
   @@index([orderId])
+  @@index([productId])
+}
+
+model Recipe {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  storeId     String    @db.ObjectId // Foreign Key to Store
+  store       Store     @relation("StoreToRecipe", fields: [storeId], references: [id])
+  repiceItems RecipeItem[] // Relation to OrderItem model
+  name        String    @default("")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  userId      String    @default("")
+  meals       MealItem[]  // Relation to Meal model
+
+  @@index([storeId])
+}
+
+// Intermediary for a many-to-many relationship
+model RecipeItem {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  recipeId  String  @db.ObjectId // Foreign Key to Order
+  recipe    Recipe  @relation(fields: [recipeId], references: [id])
+  productId String  @db.ObjectId // Foreign Key to Product
+  product   Product @relation(fields: [productId], references: [id])
+
+  @@index([recipeId])
+  @@index([productId])
+}
+
+model Meal {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  storeId     String    @db.ObjectId // Foreign Key to Store
+  store       Store     @relation("StoreToMeal", fields: [storeId], references: [id])
+  mealItems   MealItem[] // Relation to OrderItem model
+  name        String    @default("")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  userId      String    @default("")
+
+  @@index([storeId])
+}
+
+// Intermediary for a many-to-many relationship
+model MealItem {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  mealId    String  @db.ObjectId // Foreign Key to Order
+  meal      Meal    @relation(fields: [mealId], references: [id])
+  productId String  @db.ObjectId // Foreign Key to Product
+  product   Product @relation(fields: [productId], references: [id])
+  recipeId  String  @db.ObjectId // Foreign Key to Product
+  recipe    Recipe @relation(fields: [recipeId], references: [id])
+
+  @@index([mealId])
   @@index([productId])
 }
 

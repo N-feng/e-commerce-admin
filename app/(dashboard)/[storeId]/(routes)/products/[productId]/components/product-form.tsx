@@ -28,12 +28,38 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import ImageUpload from "@/components/image-upload"
 import { MultiUploader } from "@/components/mulit-uploader"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter, SheetClose } from "@/components/ui/sheet"
+import { Label } from "@/components/ui/label"
 
 const formSchema = z.object({
   name: z.string().min(1),
   images: z.object({ url: z.string() }).array(),
   price: z.coerce.number().min(1),
-  categoryId: z.string().min(1),
+  energy: z.coerce.number(),
+  carbohydrates: z.coerce.number(),
+  sugars: z.coerce.number(),
+  dietaryFiber: z.coerce.number(),
+  fat: z.coerce.number(),
+  protein: z.coerce.number(),
+  categoryId: z.string(),
+  vitaminA: z.coerce.number(),
+  thiamineB1: z.coerce.number(),
+  riboflavinB2: z.coerce.number(),
+  niacinB3: z.coerce.number(),
+  pantothenicAcidB5: z.coerce.number(),
+  vitaminB6: z.coerce.number(),
+  folateB9: z.coerce.number(),
+  vitaminC: z.coerce.number(),
+  vitaminE: z.coerce.number(),
+  vitaminK: z.coerce.number(),
+  calcium: z.coerce.number(),
+  iron: z.coerce.number(),
+  magnesium: z.coerce.number(),
+  manganese: z.coerce.number(),
+  phosphorus: z.coerce.number(),
+  potassium: z.coerce.number(),
+  sodium: z.coerce.number(),
+  zinc: z.coerce.number(),
   // colorId: z.string().min(1),
   sizeId: z.string().min(1),
   kitchenId: z.string().min(1),
@@ -77,10 +103,57 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   const defaultValues = initialData ? {
     ...initialData,
     price: parseFloat(String(initialData?.price)),
+    energy: parseFloat(String(initialData?.energy)),
+    carbohydrates: parseFloat(String(initialData?.carbohydrates)),
+    sugars: parseFloat(String(initialData?.sugars)),
+    dietaryFiber: parseFloat(String(initialData?.dietaryFiber)),
+    fat: parseFloat(String(initialData?.fat)),
+    protein: parseFloat(String(initialData?.protein)),
+    vitaminA: parseFloat(String(initialData?.vitaminA)),
+    thiamineB1: parseFloat(String(initialData?.thiamineB1)),
+    riboflavinB2: parseFloat(String(initialData?.riboflavinB2)),
+    niacinB3: parseFloat(String(initialData?.niacinB3)),
+    pantothenicAcidB5: parseFloat(String(initialData?.pantothenicAcidB5)),
+    vitaminB6: parseFloat(String(initialData?.vitaminB6)),
+    folateB9: parseFloat(String(initialData?.folateB9)),
+    vitaminC: parseFloat(String(initialData?.vitaminC)),
+    vitaminE: parseFloat(String(initialData?.vitaminE)),
+    vitaminK: parseFloat(String(initialData?.vitaminK)),
+    calcium: parseFloat(String(initialData?.calcium)),
+    iron: parseFloat(String(initialData?.iron)),
+    magnesium: parseFloat(String(initialData?.magnesium)),
+    manganese: parseFloat(String(initialData?.manganese)),
+    phosphorus: parseFloat(String(initialData?.phosphorus)),
+    potassium: parseFloat(String(initialData?.potassium)),
+    sodium: parseFloat(String(initialData?.sodium)),
+    zinc: parseFloat(String(initialData?.zinc)),
   } : {
     name: '',
     images: [],
     price: 0,
+    energy: 0,
+    carbohydrates: 0,
+    sugars: 0,
+    dietaryFiber: 0,
+    fat: 0,
+    protein: 0,
+    vitaminA: 0,
+    thiamineB1: 0,
+    riboflavinB2: 0,
+    niacinB3: 0,
+    pantothenicAcidB5: 0,
+    vitaminB6: 0,
+    folateB9: 0,
+    vitaminC: 0,
+    vitaminE: 0,
+    vitaminK: 0,
+    calcium: 0,
+    magnesium: 0,
+    manganese: 0,
+    phosphorus: 0,
+    potassium: 0,
+    sodium: 0,
+    zinc: 0,
     categoryId: '',
     colorId: '',
     sizeId: '',
@@ -94,12 +167,41 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   });
 
   const onSubmit = async (data: ProductFormValues) => {
+    const values = {
+      ...data,
+      price: String(data?.price),
+      energy: String(data?.energy),
+      carbohydrates: String(data?.carbohydrates),
+      sugars: String(data?.sugars),
+      dietaryFiber: String(data?.dietaryFiber),
+      fat: String(data?.fat),
+      protein: String(data?.protein),
+      vitaminA: String(data?.vitaminA),
+      thiamineB1: String(data?.thiamineB1),
+      riboflavinB2: String(data?.riboflavinB2),
+      niacinB3: String(data?.niacinB3),
+      pantothenicAcidB5: String(data?.pantothenicAcidB5),
+      vitaminB6: String(data?.vitaminB6),
+      folateB9: String(data?.folateB9),
+      vitaminC: String(data?.vitaminC),
+      vitaminE: String(data?.vitaminE),
+      vitaminK: String(data?.vitaminK),
+      calcium: String(data?.calcium),
+      iron: String(data?.iron),
+      magnesium: String(data?.magnesium),
+      manganese: String(data?.manganese),
+      phosphorus: String(data?.phosphorus),
+      potassium: String(data?.potassium),
+      sodium: String(data?.sodium),
+      zinc: String(data?.zinc),
+    }
+      console.log('values: ', values);
     try {
       setLoading(true);
       if (initialData) {
-        await axios.patch(`/api/${params.storeId}/products/${params.productId}`, data);
+        await axios.patch(`/api/${params.storeId}/products/${params.productId}`, values);
       } else {
-        await axios.post(`/api/${params.storeId}/products`, data);
+        await axios.post(`/api/${params.storeId}/products`, values);
       }
       router.refresh();
       router.push(`/${params.storeId}/products`);
@@ -128,13 +230,13 @@ export const ProductForm: React.FC<ProductFormProps> = ({
 
   return (
     <>
-    <AlertModal 
-      isOpen={open} 
-      onClose={() => setOpen(false)}
-      onConfirm={onDelete}
-      loading={loading}
-    />
-     <div className="flex items-center justify-between">
+      <AlertModal 
+        isOpen={open} 
+        onClose={() => setOpen(false)}
+        onConfirm={onDelete}
+        loading={loading}
+      />
+      <div className="flex items-center justify-between">
         <Heading title={title} description={description} />
         {initialData && (
           <Button
@@ -227,7 +329,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name="sizeId"
               render={({ field }) => (
@@ -249,7 +351,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                 </FormItem>
               )}
             />
-            {/* <FormField
+            <FormField
               control={form.control}
               name="colorId"
               render={({ field }) => (
@@ -361,6 +463,475 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                 </FormItem>
               )}
             />
+      
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline">Attribute</Button>
+              </SheetTrigger>
+              <SheetContent>
+                <SheetHeader>
+                  <SheetTitle>Edit Attribute</SheetTitle>
+                  {/* <SheetDescription>
+                    Make changes to your profile here. Click save when you're done.
+                  </SheetDescription> */}
+                </SheetHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="flex justify-between items-center">
+                    <Label htmlFor="name" className="text-right">
+                      Energy
+                    </Label>
+                    <FormField
+                      control={form.control}
+                      name="energy"
+                      render={({ field }) => (
+                        <FormItem className="col-span-2">
+                          {/* <FormLabel>Energy</FormLabel> */}
+                          <FormControl>
+                            <Input type="number" disabled={loading} placeholder="9.99" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <Label htmlFor="name" className="text-right">
+                      Carbohydrates
+                    </Label>
+                    <FormField
+                      control={form.control}
+                      name="carbohydrates"
+                      render={({ field }) => (
+                        <FormItem className="col-span-2">
+                          {/* <FormLabel>Carbohydrates</FormLabel> */}
+                          <FormControl>
+                            <Input type="number" disabled={loading} placeholder="9.99" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <Label htmlFor="name" className="text-right">
+                    Sugars
+                    </Label>
+                    <FormField
+                      control={form.control}
+                      name="sugars"
+                      render={({ field }) => (
+                        <FormItem className="col-span-2">
+                          {/* <FormLabel>Sugars</FormLabel> */}
+                          <FormControl>
+                            <Input type="number" disabled={loading} placeholder="9.99" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <Label htmlFor="name" className="text-right">
+                      DietaryFiber
+                    </Label>
+                    <FormField
+                      control={form.control}
+                      name="dietaryFiber"
+                      render={({ field }) => (
+                        <FormItem className="col-span-2">
+                          {/* <FormLabel>DietaryFiber</FormLabel> */}
+                          <FormControl>
+                            <Input type="number" disabled={loading} placeholder="9.99" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <Label htmlFor="name" className="text-right">
+                      Fat
+                    </Label>
+                    <FormField
+                      control={form.control}
+                      name="fat"
+                      render={({ field }) => (
+                        <FormItem className="col-span-2">
+                          {/* <FormLabel>Fat</FormLabel> */}
+                          <FormControl>
+                            <Input type="number" disabled={loading} placeholder="9.99" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <Label htmlFor="name" className="text-right">
+                      Protein
+                    </Label>
+                    <FormField
+                      control={form.control}
+                      name="protein"
+                      render={({ field }) => (
+                        <FormItem className="col-span-2">
+                          {/* <FormLabel>Protein</FormLabel> */}
+                          <FormControl>
+                            <Input type="number" disabled={loading} placeholder="9.99" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+                {/* <SheetFooter>
+                  <SheetClose asChild>
+                    <Button type="submit">Save changes</Button>
+                  </SheetClose>
+                </SheetFooter> */}
+              </SheetContent>
+            </Sheet>
+      
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline">Vitamins</Button>
+              </SheetTrigger>
+              <SheetContent>
+                <SheetHeader>
+                  <SheetTitle>Edit Vitamins</SheetTitle>
+                  {/* <SheetDescription>
+                    Make changes to your profile here. Click save when you're done.
+                  </SheetDescription> */}
+                </SheetHeader>
+                <div className="grid gap-4 py-4">
+                  <FormField
+                    control={form.control}
+                    name="vitaminA"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2">
+                        <div className="flex justify-between items-center">
+                          <FormLabel className="flex-1">
+                            VitaminA
+                          </FormLabel>
+                          <FormControl className="flex-1">
+                            <Input type="number" disabled={loading} placeholder="9.99" {...field} />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="thiamineB1"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2">
+                        <div className="flex justify-between items-center">
+                          <FormLabel className="flex-1">
+                            ThiamineB1
+                          </FormLabel>
+                          <FormControl className="flex-1">
+                            <Input type="number" disabled={loading} placeholder="9.99" {...field} />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="riboflavinB2"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2">
+                        <div className="flex justify-between items-center">
+                          <FormLabel className="flex-1">
+                            RiboflavinB2
+                          </FormLabel>
+                          <FormControl className="flex-1">
+                            <Input type="number" disabled={loading} placeholder="9.99" {...field} />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="niacinB3"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2">
+                        <div className="flex justify-between items-center">
+                          <FormLabel className="flex-1">
+                            NiacinB3
+                          </FormLabel>
+                          <FormControl className="flex-1">
+                            <Input type="number" disabled={loading} placeholder="9.99" {...field} />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="pantothenicAcidB5"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2">
+                        <div className="flex justify-between items-center">
+                          <FormLabel className="flex-1">
+                            PantothenicAcidB5
+                          </FormLabel>
+                          <FormControl className="flex-1">
+                            <Input type="number" disabled={loading} placeholder="9.99" {...field} className="space-y-2 col-span-2" />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="vitaminB6"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2">
+                        <div className="flex justify-between items-center">
+                          <FormLabel className="flex-1">
+                            VitaminB6
+                          </FormLabel>
+                          <FormControl className="flex-1">
+                            <Input type="number" disabled={loading} placeholder="9.99" {...field} />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="folateB9"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2">
+                        <div className="flex justify-between items-center">
+                          <FormLabel className="flex-1">
+                            FolateB9
+                          </FormLabel>
+                          <FormControl className="flex-1">
+                            <Input type="number" disabled={loading} placeholder="9.99" {...field} />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="vitaminC"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2">
+                        <div className="flex justify-between items-center">
+                          <FormLabel className="flex-1">
+                            VitaminC
+                          </FormLabel>
+                          <FormControl className="flex-1">
+                            <Input type="number" disabled={loading} placeholder="9.99" {...field} />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="vitaminE"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2">
+                        <div className="flex justify-between items-center">
+                          <FormLabel className="flex-1">
+                            VitaminE
+                          </FormLabel>
+                          <FormControl className="flex-1">
+                            <Input type="number" disabled={loading} placeholder="9.99" {...field} />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="vitaminK"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2">
+                        <div className="flex justify-between items-center">
+                          <FormLabel className="flex-1">
+                            VitaminK
+                          </FormLabel>
+                          <FormControl className="flex-1">
+                            <Input type="number" disabled={loading} placeholder="9.99" {...field} />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </SheetContent>
+            </Sheet>
+      
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline">Minerals</Button>
+              </SheetTrigger>
+              <SheetContent>
+                <SheetHeader>
+                  <SheetTitle>Edit Minerals</SheetTitle>
+                </SheetHeader>
+                <div className="grid gap-4 py-4">
+                  <FormField
+                    control={form.control}
+                    name="calcium"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2">
+                        <div className="flex justify-between items-center">
+                          <FormLabel className="flex-1">
+                            Calcium
+                          </FormLabel>
+                          <FormControl className="flex-1">
+                            <Input type="number" disabled={loading} placeholder="9.99" {...field} />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="iron"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2">
+                        <div className="flex justify-between items-center">
+                          <FormLabel className="flex-1">
+                            Iron
+                          </FormLabel>
+                          <FormControl className="flex-1">
+                            <Input type="number" disabled={loading} placeholder="9.99" {...field} />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="magnesium"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2">
+                        <div className="flex justify-between items-center">
+                          <FormLabel className="flex-1">
+                            Magnesium
+                          </FormLabel>
+                          <FormControl className="flex-1">
+                            <Input type="number" disabled={loading} placeholder="9.99" {...field} />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="manganese"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2">
+                        <div className="flex justify-between items-center">
+                          <FormLabel className="flex-1">
+                            Manganese
+                          </FormLabel>
+                          <FormControl className="flex-1">
+                            <Input type="number" disabled={loading} placeholder="9.99" {...field} />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="phosphorus"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2">
+                        <div className="flex justify-between items-center">
+                          <FormLabel className="flex-1">
+                            Phosphorus
+                          </FormLabel>
+                          <FormControl className="flex-1">
+                            <Input type="number" disabled={loading} placeholder="9.99" {...field} />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="potassium"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2">
+                        <div className="flex justify-between items-center">
+                          <FormLabel className="flex-1">
+                            Potassium
+                          </FormLabel>
+                          <FormControl className="flex-1">
+                            <Input type="number" disabled={loading} placeholder="9.99" {...field} />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="sodium"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2">
+                        <div className="flex justify-between items-center">
+                          <FormLabel className="flex-1">
+                            Sodium
+                          </FormLabel>
+                          <FormControl className="flex-1">
+                            <Input type="number" disabled={loading} placeholder="9.99" {...field} />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="zinc"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2">
+                        <div className="flex justify-between items-center">
+                          <FormLabel className="flex-1">
+                            Zinc
+                          </FormLabel>
+                          <FormControl className="flex-1">
+                            <Input type="number" disabled={loading} placeholder="9.99" {...field} />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                {/* <SheetFooter>
+                  <SheetClose asChild>
+                    <Button type="submit">Save changes</Button>
+                  </SheetClose>
+                </SheetFooter> */}
+              </SheetContent>
+            </Sheet>
           </div>
           <Button disabled={loading} className="ml-auto" type="submit">
             {action}
