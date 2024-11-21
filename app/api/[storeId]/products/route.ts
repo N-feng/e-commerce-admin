@@ -86,7 +86,7 @@ export async function POST(
         name,
         chineseName,
         price,
-        // qty,
+        qty,
         energy,
         carbohydrates,
         sugars,
