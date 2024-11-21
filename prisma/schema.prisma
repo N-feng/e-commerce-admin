@@ -70,7 +70,7 @@ model Product {
   name        String
   chineseName String
   price       String
-  // qty         Int
+  qty         Int
   isFeatured  Boolean   @default(false)
   isArchived  Boolean   @default(false)
   // sizeId      String    @db.ObjectId // Foreign Key to Size
