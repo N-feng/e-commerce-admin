@@ -28,6 +28,7 @@ model Store {
   orders          Order[]       @relation("StoreToOrder")
   recipes         Recipe[]      @relation("StoreToRecipe")
   meals           Meal[]        @relation("StoreToMeal")
+  attribute       Attribute[]   @relation("StoreToAttribute")
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 }
@@ -67,22 +68,28 @@ model Product {
   categoryId  String    @db.ObjectId // Foreign Key to Category
   category    Category  @relation("CategoryToProduct", fields: [categoryId], references: [id])
   name        String
+  chineseName String
   price       String
-  qty         Int
+  // qty         Int
   isFeatured  Boolean   @default(false)
   isArchived  Boolean   @default(false)
-  sizeId      String    @db.ObjectId // Foreign Key to Size
-  size        Size      @relation(fields: [sizeId], references: [id])
+  // sizeId      String    @db.ObjectId // Foreign Key to Size
+  // size        Size      @relation(fields: [sizeId], references: [id])
   kitchenId   String    @db.ObjectId // Foreign Key to Kitchen
   kitchen     Kitchen   @relation(fields: [kitchenId], references: [id])
   cuisineId   String    @db.ObjectId // Foreign Key to Cuisine
   cuisine     Cuisine   @relation(fields: [cuisineId], references: [id])
+
   // colorId     String    @db.ObjectId // Foreign Key to Color
   // color       Color     @relation(fields: [colorId], references: [id])
-  images      Image[]   // Relation to Image model
+  
+  images      Image[]       // Relation to Image model
   orderItems  OrderItem[]   // Relation to Order model
+
   recipeItems RecipeItem[]  // Relation to Recipe model
-  meals       MealItem[]  // Relation to Meal model
+  meals       MealItem[]    // Relation to Meal model
+  attribute   Attribute[]   // Relation to Attribute model
+
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
@@ -118,10 +125,25 @@ model Product {
 
   @@index([storeId])
   @@index([categoryId])
-  @@index([sizeId])
+  // @@index([sizeId])
   @@index([kitchenId])
   @@index([cuisineId])
   // @@index([colorId])
+}
+
+model Attribute {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  storeId     String    @db.ObjectId // Foreign Key to Store
+  store       Store     @relation("StoreToAttribute", fields: [storeId], references: [id])
+  productId   String    @db.ObjectId // Foreign Key to Product
+  product     Product   @relation(fields: [productId], references: [id])
+
+  energy        String
+  carbohydrates String
+  sugars        String
+  dietaryFiber  String
+  fat           String
+  protein       String
 }
 
 model Order {
@@ -211,7 +233,7 @@ model Size {
   store       Store     @relation("StoreToSize", fields: [storeId], references: [id])
   name        String
   value       Int
-  products    Product[] // Relation to Product model
+  // products    Product[] // Relation to Product model
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 

@@ -33,35 +33,36 @@ import { Label } from "@/components/ui/label"
 
 const formSchema = z.object({
   name: z.string().min(1),
+  chineseName: z.string().min(1),
   images: z.object({ url: z.string() }).array(),
   price: z.coerce.number().min(1),
-  energy: z.coerce.number(),
-  carbohydrates: z.coerce.number(),
-  sugars: z.coerce.number(),
-  dietaryFiber: z.coerce.number(),
-  fat: z.coerce.number(),
-  protein: z.coerce.number(),
-  categoryId: z.string(),
-  vitaminA: z.coerce.number(),
-  thiamineB1: z.coerce.number(),
-  riboflavinB2: z.coerce.number(),
-  niacinB3: z.coerce.number(),
-  pantothenicAcidB5: z.coerce.number(),
-  vitaminB6: z.coerce.number(),
-  folateB9: z.coerce.number(),
-  vitaminC: z.coerce.number(),
-  vitaminE: z.coerce.number(),
-  vitaminK: z.coerce.number(),
-  calcium: z.coerce.number(),
-  iron: z.coerce.number(),
-  magnesium: z.coerce.number(),
-  manganese: z.coerce.number(),
-  phosphorus: z.coerce.number(),
-  potassium: z.coerce.number(),
-  sodium: z.coerce.number(),
-  zinc: z.coerce.number(),
+  energy: z.coerce.number().min(0),
+  carbohydrates: z.coerce.number().min(0),
+  sugars: z.coerce.number().min(0),
+  dietaryFiber: z.coerce.number().min(0),
+  fat: z.coerce.number().min(0),
+  protein: z.coerce.number().min(0),
+  vitaminA: z.coerce.number().min(0),
+  thiamineB1: z.coerce.number().min(0),
+  riboflavinB2: z.coerce.number().min(0),
+  niacinB3: z.coerce.number().min(0),
+  pantothenicAcidB5: z.coerce.number().min(0),
+  vitaminB6: z.coerce.number().min(0),
+  folateB9: z.coerce.number().min(0),
+  vitaminC: z.coerce.number().min(0),
+  vitaminE: z.coerce.number().min(0),
+  vitaminK: z.coerce.number().min(0),
+  calcium: z.coerce.number().min(0),
+  iron: z.coerce.number().min(0),
+  magnesium: z.coerce.number().min(0),
+  manganese: z.coerce.number().min(0),
+  phosphorus: z.coerce.number().min(0),
+  potassium: z.coerce.number().min(0),
+  sodium: z.coerce.number().min(0),
+  zinc: z.coerce.number().min(0),
   // colorId: z.string().min(1),
-  sizeId: z.string().min(1),
+  // sizeId: z.string().min(1),
+  categoryId: z.string().min(1),
   kitchenId: z.string().min(1),
   cuisineId: z.string().min(1),
   isFeatured: z.boolean().default(false).optional(),
@@ -129,6 +130,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     zinc: parseFloat(String(initialData?.zinc)),
   } : {
     name: '',
+    chineseName: '',
     images: [],
     price: 0,
     energy: 0,
@@ -148,6 +150,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     vitaminE: 0,
     vitaminK: 0,
     calcium: 0,
+    iron: 0,
     magnesium: 0,
     manganese: 0,
     phosphorus: 0,
@@ -289,6 +292,19 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                   <FormLabel>Name</FormLabel>
                   <FormControl>
                     <Input disabled={loading} placeholder="Product name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="chineseName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>ChineseName</FormLabel>
+                  <FormControl>
+                    <Input disabled={loading} placeholder="Product chineseName" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

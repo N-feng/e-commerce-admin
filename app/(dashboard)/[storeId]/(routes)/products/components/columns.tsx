@@ -9,7 +9,7 @@ export type ProductColumn = {
   name: string;
   price: string;
   category: string;
-  size: string;
+  // size: string;
   // color: string;
   kitchen: string;
   cuisine: string;
@@ -22,6 +22,10 @@ export const columns: ColumnDef<ProductColumn>[] = [
   {
     accessorKey: "name",
     header: "Name",
+  },
+  {
+    accessorKey: "chineseName",
+    header: "ChineseName",
   },
   {
     accessorKey: "isArchived",
@@ -39,10 +43,10 @@ export const columns: ColumnDef<ProductColumn>[] = [
     accessorKey: "category",
     header: "Category",
   },
-  {
-    accessorKey: "size",
-    header: "Size",
-  },
+  // {
+  //   accessorKey: "size",
+  //   header: "Size",
+  // },
   {
     accessorKey: "kitchen",
     header: "Kitchen",

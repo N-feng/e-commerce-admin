@@ -17,7 +17,7 @@ const ProductsPage = async ({
     },
     include: {
       category: true,
-      size: true,
+      // size: true,
       // color: true,
       kitchen: true,
       cuisine: true,
@@ -30,11 +30,12 @@ const ProductsPage = async ({
   const formattedProducts: ProductColumn[] = products.map((item) => ({
     id: item.id,
     name: item.name,
+    chineseName: item.chineseName,
     isFeatured: item.isFeatured,
     isArchived: item.isArchived,
     price: formatter.format(Number(item.price)),
     category: item.category.name,
-    size: item.size.name,
+    // size: item.size.name,
     // color: item.color.value,
     kitchen: item.kitchen.value,
     cuisine: item.cuisine.value,

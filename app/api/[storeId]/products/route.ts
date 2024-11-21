@@ -12,7 +12,31 @@ export async function POST(
 
     const body = await req.json();
 
-    const { name, price, qty, categoryId, colorId, sizeId, images, isFeatured, isArchived, kitchenId, cuisineId } = body;
+    const { name, chineseName, price, qty,
+      energy,
+      carbohydrates,
+      sugars,
+      dietaryFiber,
+      fat,
+      protein,
+      vitaminA,
+      thiamineB1,
+      riboflavinB2,
+      niacinB3,
+      pantothenicAcidB5,
+      vitaminB6,
+      folateB9,
+      vitaminC,
+      vitaminE,
+      vitaminK,
+      calcium,
+      iron,
+      magnesium,
+      manganese,
+      phosphorus,
+      potassium,
+      sodium,
+      zinc, categoryId, colorId, sizeId, images, isFeatured, isArchived, kitchenId, cuisineId } = body;
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
@@ -38,9 +62,9 @@ export async function POST(
     //   return new NextResponse("Color id is required", { status: 400 });
     // }
 
-    if (!sizeId) {
-      return new NextResponse("Size id is required", { status: 400 });
-    }
+    // if (!sizeId) {
+    //   return new NextResponse("Size id is required", { status: 400 });
+    // }
 
     if (!params.storeId) {
       return new NextResponse("Store id is required", { status: 400 });
@@ -60,13 +84,38 @@ export async function POST(
     const product = await prismadb.product.create({
       data: {
         name,
+        chineseName,
         price,
-        qty,
+        // qty,
+        energy,
+        carbohydrates,
+        sugars,
+        dietaryFiber,
+        fat,
+        protein,
+        vitaminA,
+        thiamineB1,
+        riboflavinB2,
+        niacinB3,
+        pantothenicAcidB5,
+        vitaminB6,
+        folateB9,
+        vitaminC,
+        vitaminE,
+        vitaminK,
+        calcium,
+        iron,
+        magnesium,
+        manganese,
+        phosphorus,
+        potassium,
+        sodium,
+        zinc,
         isFeatured,
         isArchived,
         categoryId,
         // colorId,
-        sizeId,
+        // sizeId,
         kitchenId,
         cuisineId,
         storeId: params.storeId,
@@ -77,6 +126,19 @@ export async function POST(
             ],
           },
         },
+        attribute: {
+          createMany: {
+            data: [{
+              energy,
+              carbohydrates,
+              sugars,
+              dietaryFiber,
+              fat,
+              protein,
+              storeId: params.storeId
+            }]
+          }
+        }
       },
     });
   
@@ -118,7 +180,7 @@ export async function GET(
         storeId: params.storeId,
         categoryId,
         // colorId,
-        sizeId,
+        // sizeId,
         kitchenId,
         cuisineId,
         isFeatured: isFeatured ? true : undefined,
@@ -130,7 +192,7 @@ export async function GET(
         // kitchen: true,
         // cuisine: true,
         // color: true,
-        size: true,
+        // size: true,
       },
       orderBy: {
         createdAt: 'desc',

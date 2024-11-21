@@ -23,7 +23,7 @@ export async function GET(
     const product = await prismadb.product.findUnique({
       where: {
         categoryId: params.categoryId,
-        sizeId: params.sizeId,
+        // sizeId: params.sizeId,
         kitchenId: params.kitchenId,
         cuisineId: params.cuisineId,
         id: params.productId,
@@ -31,7 +31,7 @@ export async function GET(
       include: {
         images: true,
         category: true,
-        size: true,
+        // size: true,
         // kitchen: true,
         // cuisine: true,
         // color: true,
@@ -94,7 +94,13 @@ export async function PATCH(
 
     const body = await req.json();
 
-    const { name, price, categoryId, images, colorId, sizeId, isFeatured, isArchived } = body;
+    const { name, chineseName, price,
+      energy,
+      carbohydrates,
+      sugars,
+      dietaryFiber,
+      fat,
+      protein, categoryId, images, colorId, sizeId, isFeatured, isArchived } = body;
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
@@ -124,9 +130,9 @@ export async function PATCH(
     //   return new NextResponse("Color id is required", { status: 400 });
     // }
 
-    if (!sizeId) {
-      return new NextResponse("Size id is required", { status: 400 });
-    }
+    // if (!sizeId) {
+    //   return new NextResponse("Size id is required", { status: 400 });
+    // }
 
     const storeByUserId = await prismadb.store.findFirst({
       where: {
@@ -145,10 +151,11 @@ export async function PATCH(
       },
       data: {
         name,
+        chineseName,
         price,
         categoryId,
         // colorId,
-        sizeId,
+        // sizeId,
         images: {
           deleteMany: {},
         },
@@ -168,6 +175,19 @@ export async function PATCH(
               ...images.map((image: { url: string }) => image),
             ],
           },
+        },
+        attribute: {
+          createMany: {
+            data: [{
+              energy,
+              carbohydrates,
+              sugars,
+              dietaryFiber,
+              fat,
+              protein,
+              storeId: params.storeId
+            }]
+          }
         },
       },
     })
