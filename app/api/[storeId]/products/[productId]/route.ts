@@ -100,7 +100,25 @@ export async function PATCH(
       sugars,
       dietaryFiber,
       fat,
-      protein, categoryId, images, colorId, sizeId, isFeatured, isArchived } = body;
+      protein,
+      vitaminA,
+      thiamineB1,
+      riboflavinB2,
+      niacinB3,
+      pantothenicAcidB5,
+      vitaminB6,
+      folateB9,
+      vitaminC,
+      vitaminE,
+      vitaminK,
+      calcium,
+      iron,
+      magnesium,
+      manganese,
+      phosphorus,
+      potassium,
+      sodium,
+      zinc, categoryId, images, colorId, sizeId, isFeatured, isArchived } = body;
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
@@ -159,6 +177,15 @@ export async function PATCH(
         images: {
           deleteMany: {},
         },
+        attribute: {
+          deleteMany: {},
+        },
+        vitamins: {
+          deleteMany: {},
+        },
+        minerals: {
+          deleteMany: {},
+        },
         isFeatured,
         isArchived,
       },
@@ -185,6 +212,38 @@ export async function PATCH(
               dietaryFiber,
               fat,
               protein,
+              storeId: params.storeId
+            }]
+          }
+        },
+        vitamins: {
+          createMany: {
+            data: [{
+              vitaminA,
+              thiamineB1,
+              riboflavinB2,
+              niacinB3,
+              pantothenicAcidB5,
+              vitaminB6,
+              folateB9,
+              vitaminC,
+              vitaminE,
+              vitaminK,
+              storeId: params.storeId
+            }]
+          }
+        },
+        minerals: {
+          createMany: {
+            data: [{
+              calcium,
+              iron,
+              magnesium,
+              manganese,
+              phosphorus,
+              potassium,
+              sodium,
+              zinc,
               storeId: params.storeId
             }]
           }

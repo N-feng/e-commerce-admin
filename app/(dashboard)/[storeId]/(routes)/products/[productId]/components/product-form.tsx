@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
 import { Trash } from "lucide-react"
-import { Category, Color, Cuisine, Image, Kitchen, Product, Size } from "@prisma/client"
+import { Attribute, Category, Color, Cuisine, Image, Kitchen, Minerals, Product, Size, Vitamins } from "@prisma/client"
 import { useParams, useRouter } from "next/navigation"
 
 import { Input } from "@/components/ui/input"
@@ -36,6 +36,7 @@ const formSchema = z.object({
   chineseName: z.string().min(1),
   images: z.object({ url: z.string() }).array(),
   price: z.coerce.number().min(1),
+  qty: z.coerce.number().min(1),
   energy: z.coerce.number().min(0),
   carbohydrates: z.coerce.number().min(0),
   sugars: z.coerce.number().min(0),
@@ -74,6 +75,12 @@ type ProductFormValues = z.infer<typeof formSchema>
 interface ProductFormProps {
   initialData: Product & {
     images: Image[]
+  } & {
+    attribute: Attribute[]
+  } & {
+    vitamins: Vitamins[]
+  } & {
+    minerals: Minerals[]
   } | null;
   categories: Category[];
   colors: Color[];
@@ -97,6 +104,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   const [loading, setLoading] = useState(false);
 
   const title = initialData ? 'Edit product' : 'Create product';
+  console.log('initialData: ', initialData);
   const description = initialData ? 'Edit a product.' : 'Add a new product';
   const toastMessage = initialData ? 'Product updated.' : 'Product created.';
   const action = initialData ? 'Save changes' : 'Create';
@@ -104,35 +112,37 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   const defaultValues = initialData ? {
     ...initialData,
     price: parseFloat(String(initialData?.price)),
-    energy: parseFloat(String(initialData?.energy)),
-    carbohydrates: parseFloat(String(initialData?.carbohydrates)),
-    sugars: parseFloat(String(initialData?.sugars)),
-    dietaryFiber: parseFloat(String(initialData?.dietaryFiber)),
-    fat: parseFloat(String(initialData?.fat)),
-    protein: parseFloat(String(initialData?.protein)),
-    vitaminA: parseFloat(String(initialData?.vitaminA)),
-    thiamineB1: parseFloat(String(initialData?.thiamineB1)),
-    riboflavinB2: parseFloat(String(initialData?.riboflavinB2)),
-    niacinB3: parseFloat(String(initialData?.niacinB3)),
-    pantothenicAcidB5: parseFloat(String(initialData?.pantothenicAcidB5)),
-    vitaminB6: parseFloat(String(initialData?.vitaminB6)),
-    folateB9: parseFloat(String(initialData?.folateB9)),
-    vitaminC: parseFloat(String(initialData?.vitaminC)),
-    vitaminE: parseFloat(String(initialData?.vitaminE)),
-    vitaminK: parseFloat(String(initialData?.vitaminK)),
-    calcium: parseFloat(String(initialData?.calcium)),
-    iron: parseFloat(String(initialData?.iron)),
-    magnesium: parseFloat(String(initialData?.magnesium)),
-    manganese: parseFloat(String(initialData?.manganese)),
-    phosphorus: parseFloat(String(initialData?.phosphorus)),
-    potassium: parseFloat(String(initialData?.potassium)),
-    sodium: parseFloat(String(initialData?.sodium)),
-    zinc: parseFloat(String(initialData?.zinc)),
+    qty: parseFloat(String(initialData?.qty)),
+    energy: parseFloat(String(initialData?.attribute[0]?.energy)),
+    carbohydrates: parseFloat(String(initialData?.attribute[0]?.carbohydrates)),
+    sugars: parseFloat(String(initialData?.attribute[0]?.sugars)),
+    dietaryFiber: parseFloat(String(initialData?.attribute[0]?.dietaryFiber)),
+    fat: parseFloat(String(initialData?.attribute[0]?.fat)),
+    protein: parseFloat(String(initialData?.attribute[0]?.protein)),
+    vitaminA: parseFloat(String(initialData?.vitamins[0]?.vitaminA)),
+    thiamineB1: parseFloat(String(initialData?.vitamins[0]?.thiamineB1)),
+    riboflavinB2: parseFloat(String(initialData?.vitamins[0]?.riboflavinB2)),
+    niacinB3: parseFloat(String(initialData?.vitamins[0]?.niacinB3)),
+    pantothenicAcidB5: parseFloat(String(initialData?.vitamins[0]?.pantothenicAcidB5)),
+    vitaminB6: parseFloat(String(initialData?.vitamins[0]?.vitaminB6)),
+    folateB9: parseFloat(String(initialData?.vitamins[0]?.folateB9)),
+    vitaminC: parseFloat(String(initialData?.vitamins[0]?.vitaminC)),
+    vitaminE: parseFloat(String(initialData?.vitamins[0]?.vitaminE)),
+    vitaminK: parseFloat(String(initialData?.vitamins[0]?.vitaminK)),
+    calcium: parseFloat(String(initialData?.minerals[0]?.calcium)),
+    iron: parseFloat(String(initialData?.minerals[0]?.iron)),
+    magnesium: parseFloat(String(initialData?.minerals[0]?.magnesium)),
+    manganese: parseFloat(String(initialData?.minerals[0]?.manganese)),
+    phosphorus: parseFloat(String(initialData?.minerals[0]?.phosphorus)),
+    potassium: parseFloat(String(initialData?.minerals[0]?.potassium)),
+    sodium: parseFloat(String(initialData?.minerals[0]?.sodium)),
+    zinc: parseFloat(String(initialData?.minerals[0]?.zinc)),
   } : {
     name: '',
     chineseName: '',
     images: [],
     price: 0,
+    qty: 0,
     energy: 0,
     carbohydrates: 0,
     sugars: 0,
@@ -173,6 +183,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     const values = {
       ...data,
       price: String(data?.price),
+      qty: data?.qty,
       energy: String(data?.energy),
       carbohydrates: String(data?.carbohydrates),
       sugars: String(data?.sugars),
@@ -198,7 +209,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       sodium: String(data?.sodium),
       zinc: String(data?.zinc),
     }
-      console.log('values: ', values);
     try {
       setLoading(true);
       if (initialData) {
@@ -316,6 +326,19 @@ export const ProductForm: React.FC<ProductFormProps> = ({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Price</FormLabel>
+                  <FormControl>
+                    <Input type="number" disabled={loading} placeholder="9.99" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="qty"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Qty</FormLabel>
                   <FormControl>
                     <Input type="number" disabled={loading} placeholder="9.99" {...field} />
                   </FormControl>

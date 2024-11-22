@@ -7,12 +7,15 @@ const ProductPage = async ({
 }: {
   params: { productId: string, storeId: string }
 }) => {
-  const product = params.productId.length === 3 ? null : await prismadb.product.findUnique({
+  const product = params.productId === 'new' ? null : await prismadb.product.findUnique({
     where: {
       id: params.productId,
     },
     include: {
       images: true,
+      attribute: true,
+      vitamins: true,
+      minerals: true,
     }
   });
 

@@ -87,30 +87,6 @@ export async function POST(
         chineseName,
         price,
         qty,
-        energy,
-        carbohydrates,
-        sugars,
-        dietaryFiber,
-        fat,
-        protein,
-        vitaminA,
-        thiamineB1,
-        riboflavinB2,
-        niacinB3,
-        pantothenicAcidB5,
-        vitaminB6,
-        folateB9,
-        vitaminC,
-        vitaminE,
-        vitaminK,
-        calcium,
-        iron,
-        magnesium,
-        manganese,
-        phosphorus,
-        potassium,
-        sodium,
-        zinc,
         isFeatured,
         isArchived,
         categoryId,
@@ -135,6 +111,38 @@ export async function POST(
               dietaryFiber,
               fat,
               protein,
+              storeId: params.storeId
+            }]
+          }
+        },
+        vitamins: {
+          createMany: {
+            data: [{
+              vitaminA,
+              thiamineB1,
+              riboflavinB2,
+              niacinB3,
+              pantothenicAcidB5,
+              vitaminB6,
+              folateB9,
+              vitaminC,
+              vitaminE,
+              vitaminK,
+              storeId: params.storeId
+            }]
+          }
+        },
+        minerals: {
+          createMany: {
+            data: [{
+              calcium,
+              iron,
+              magnesium,
+              manganese,
+              phosphorus,
+              potassium,
+              sodium,
+              zinc,
               storeId: params.storeId
             }]
           }
