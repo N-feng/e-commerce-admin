@@ -13,7 +13,8 @@ export async function POST(
     const body = await req.json();
 
     const { name, chineseName, price, qty,
-      energy,
+      energyKcal,
+      energyKj,
       carbohydrates,
       sugars,
       dietaryFiber,
@@ -105,7 +106,8 @@ export async function POST(
         attribute: {
           createMany: {
             data: [{
-              energy,
+              energyKcal,
+              energyKj,
               carbohydrates,
               sugars,
               dietaryFiber,

@@ -37,7 +37,8 @@ const formSchema = z.object({
   images: z.object({ url: z.string() }).array(),
   price: z.coerce.number().min(1),
   qty: z.coerce.number().min(1),
-  energy: z.coerce.number().min(0),
+  energyKcal: z.coerce.number().min(0),
+  energyKj: z.coerce.number().min(0),
   carbohydrates: z.coerce.number().min(0),
   sugars: z.coerce.number().min(0),
   dietaryFiber: z.coerce.number().min(0),
@@ -113,7 +114,8 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     ...initialData,
     price: parseFloat(String(initialData?.price)),
     qty: parseFloat(String(initialData?.qty)),
-    energy: parseFloat(String(initialData?.attribute[0]?.energy)),
+    energyKcal: parseFloat(String(initialData?.attribute[0]?.energyKcal)),
+    energyKj: parseFloat(String(initialData?.attribute[0]?.energyKj)),
     carbohydrates: parseFloat(String(initialData?.attribute[0]?.carbohydrates)),
     sugars: parseFloat(String(initialData?.attribute[0]?.sugars)),
     dietaryFiber: parseFloat(String(initialData?.attribute[0]?.dietaryFiber)),
@@ -141,9 +143,10 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     name: '',
     chineseName: '',
     images: [],
-    price: 0,
-    qty: 0,
-    energy: 0,
+    price: 1,
+    qty: 1,
+    energyKcal: 0,
+    energyKj: 0,
     carbohydrates: 0,
     sugars: 0,
     dietaryFiber: 0,
@@ -184,7 +187,8 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       ...data,
       price: String(data?.price),
       qty: data?.qty,
-      energy: String(data?.energy),
+      energyKcal: String(data?.energyKcal),
+      energyKj: String(data?.energyKj),
       carbohydrates: String(data?.carbohydrates),
       sugars: String(data?.sugars),
       dietaryFiber: String(data?.dietaryFiber),
@@ -517,11 +521,11 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                 <div className="grid gap-4 py-4">
                   <div className="flex justify-between items-center">
                     <Label htmlFor="name" className="text-right">
-                      Energy
+                      Energy  (kcal)
                     </Label>
                     <FormField
                       control={form.control}
-                      name="energy"
+                      name="energyKcal"
                       render={({ field }) => (
                         <FormItem className="col-span-2">
                           {/* <FormLabel>Energy</FormLabel> */}
@@ -535,7 +539,25 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                   </div>
                   <div className="flex justify-between items-center">
                     <Label htmlFor="name" className="text-right">
-                      Carbohydrates
+                      Energy  (kJ)
+                    </Label>
+                    <FormField
+                      control={form.control}
+                      name="energyKj"
+                      render={({ field }) => (
+                        <FormItem className="col-span-2">
+                          {/* <FormLabel>Energy</FormLabel> */}
+                          <FormControl>
+                            <Input type="number" disabled={loading} placeholder="9.99" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <Label htmlFor="name" className="text-right">
+                      Carbohydrates   (g)
                     </Label>
                     <FormField
                       control={form.control}
@@ -553,7 +575,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                   </div>
                   <div className="flex justify-between items-center">
                     <Label htmlFor="name" className="text-right">
-                    Sugars
+                      Sugars   (g)
                     </Label>
                     <FormField
                       control={form.control}
@@ -571,7 +593,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                   </div>
                   <div className="flex justify-between items-center">
                     <Label htmlFor="name" className="text-right">
-                      DietaryFiber
+                      DietaryFiber   (g)
                     </Label>
                     <FormField
                       control={form.control}
@@ -589,7 +611,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                   </div>
                   <div className="flex justify-between items-center">
                     <Label htmlFor="name" className="text-right">
-                      Fat
+                      Fat   (g)
                     </Label>
                     <FormField
                       control={form.control}
@@ -607,7 +629,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                   </div>
                   <div className="flex justify-between items-center">
                     <Label htmlFor="name" className="text-right">
-                      Protein
+                      Protein   (g)
                     </Label>
                     <FormField
                       control={form.control}
@@ -651,7 +673,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       <FormItem className="col-span-2">
                         <div className="flex justify-between items-center">
                           <FormLabel className="flex-1">
-                            VitaminA
+                            VitaminA   (μg)
                           </FormLabel>
                           <FormControl className="flex-1">
                             <Input type="number" disabled={loading} placeholder="9.99" {...field} />
@@ -668,7 +690,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       <FormItem className="col-span-2">
                         <div className="flex justify-between items-center">
                           <FormLabel className="flex-1">
-                            ThiamineB1
+                            ThiamineB1   (mg)
                           </FormLabel>
                           <FormControl className="flex-1">
                             <Input type="number" disabled={loading} placeholder="9.99" {...field} />
@@ -685,7 +707,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       <FormItem className="col-span-2">
                         <div className="flex justify-between items-center">
                           <FormLabel className="flex-1">
-                            RiboflavinB2
+                            RiboflavinB2   (mg)
                           </FormLabel>
                           <FormControl className="flex-1">
                             <Input type="number" disabled={loading} placeholder="9.99" {...field} />
@@ -702,7 +724,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       <FormItem className="col-span-2">
                         <div className="flex justify-between items-center">
                           <FormLabel className="flex-1">
-                            NiacinB3
+                            NiacinB3   (mg)
                           </FormLabel>
                           <FormControl className="flex-1">
                             <Input type="number" disabled={loading} placeholder="9.99" {...field} />
@@ -719,7 +741,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       <FormItem className="col-span-2">
                         <div className="flex justify-between items-center">
                           <FormLabel className="flex-1">
-                            PantothenicAcidB5
+                            PantothenicAcidB5   (mg)
                           </FormLabel>
                           <FormControl className="flex-1">
                             <Input type="number" disabled={loading} placeholder="9.99" {...field} className="space-y-2 col-span-2" />
@@ -736,7 +758,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       <FormItem className="col-span-2">
                         <div className="flex justify-between items-center">
                           <FormLabel className="flex-1">
-                            VitaminB6
+                            VitaminB6   (mg)
                           </FormLabel>
                           <FormControl className="flex-1">
                             <Input type="number" disabled={loading} placeholder="9.99" {...field} />
@@ -753,7 +775,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       <FormItem className="col-span-2">
                         <div className="flex justify-between items-center">
                           <FormLabel className="flex-1">
-                            FolateB9
+                            FolateB9   (μg)
                           </FormLabel>
                           <FormControl className="flex-1">
                             <Input type="number" disabled={loading} placeholder="9.99" {...field} />
@@ -770,7 +792,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       <FormItem className="col-span-2">
                         <div className="flex justify-between items-center">
                           <FormLabel className="flex-1">
-                            VitaminC
+                            VitaminC   (mg)
                           </FormLabel>
                           <FormControl className="flex-1">
                             <Input type="number" disabled={loading} placeholder="9.99" {...field} />
@@ -787,7 +809,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       <FormItem className="col-span-2">
                         <div className="flex justify-between items-center">
                           <FormLabel className="flex-1">
-                            VitaminE
+                            VitaminE   (mg)
                           </FormLabel>
                           <FormControl className="flex-1">
                             <Input type="number" disabled={loading} placeholder="9.99" {...field} />
@@ -804,7 +826,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       <FormItem className="col-span-2">
                         <div className="flex justify-between items-center">
                           <FormLabel className="flex-1">
-                            VitaminK
+                            VitaminK   (μg)
                           </FormLabel>
                           <FormControl className="flex-1">
                             <Input type="number" disabled={loading} placeholder="9.99" {...field} />
@@ -834,7 +856,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       <FormItem className="col-span-2">
                         <div className="flex justify-between items-center">
                           <FormLabel className="flex-1">
-                            Calcium
+                            Calcium   (mg)
                           </FormLabel>
                           <FormControl className="flex-1">
                             <Input type="number" disabled={loading} placeholder="9.99" {...field} />
@@ -851,7 +873,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       <FormItem className="col-span-2">
                         <div className="flex justify-between items-center">
                           <FormLabel className="flex-1">
-                            Iron
+                            Iron   (mg)
                           </FormLabel>
                           <FormControl className="flex-1">
                             <Input type="number" disabled={loading} placeholder="9.99" {...field} />
@@ -868,7 +890,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       <FormItem className="col-span-2">
                         <div className="flex justify-between items-center">
                           <FormLabel className="flex-1">
-                            Magnesium
+                            Magnesium   (mg)
                           </FormLabel>
                           <FormControl className="flex-1">
                             <Input type="number" disabled={loading} placeholder="9.99" {...field} />
@@ -885,7 +907,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       <FormItem className="col-span-2">
                         <div className="flex justify-between items-center">
                           <FormLabel className="flex-1">
-                            Manganese
+                            Manganese   (mg)
                           </FormLabel>
                           <FormControl className="flex-1">
                             <Input type="number" disabled={loading} placeholder="9.99" {...field} />
@@ -902,7 +924,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       <FormItem className="col-span-2">
                         <div className="flex justify-between items-center">
                           <FormLabel className="flex-1">
-                            Phosphorus
+                            Phosphorus   (mg)
                           </FormLabel>
                           <FormControl className="flex-1">
                             <Input type="number" disabled={loading} placeholder="9.99" {...field} />
@@ -919,7 +941,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       <FormItem className="col-span-2">
                         <div className="flex justify-between items-center">
                           <FormLabel className="flex-1">
-                            Potassium
+                            Potassium   (mg)
                           </FormLabel>
                           <FormControl className="flex-1">
                             <Input type="number" disabled={loading} placeholder="9.99" {...field} />
@@ -936,7 +958,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       <FormItem className="col-span-2">
                         <div className="flex justify-between items-center">
                           <FormLabel className="flex-1">
-                            Sodium
+                            Sodium   (mg)
                           </FormLabel>
                           <FormControl className="flex-1">
                             <Input type="number" disabled={loading} placeholder="9.99" {...field} />
@@ -953,7 +975,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       <FormItem className="col-span-2">
                         <div className="flex justify-between items-center">
                           <FormLabel className="flex-1">
-                            Zinc
+                            Zinc   (mg)
                           </FormLabel>
                           <FormControl className="flex-1">
                             <Input type="number" disabled={loading} placeholder="9.99" {...field} />

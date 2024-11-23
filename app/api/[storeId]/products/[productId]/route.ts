@@ -71,6 +71,31 @@ export async function DELETE(
       return new NextResponse("Unauthorized", { status: 405 });
     }
 
+    await prismadb.product.update({
+      where: {
+        id: params.productId
+      },
+      data: {
+        // colorId,
+        // sizeId,
+        images: {
+          deleteMany: {},
+        },
+        attribute: {
+          deleteMany: {},
+        },
+        vitamins: {
+          deleteMany: {},
+        },
+        minerals: {
+          deleteMany: {},
+        },
+        // orderItems: {
+        //   deleteMany: {},
+        // },
+      },
+    });
+
     const product = await prismadb.product.delete({
       where: {
         id: params.productId
@@ -95,7 +120,8 @@ export async function PATCH(
     const body = await req.json();
 
     const { name, chineseName, price,
-      energy,
+      energyKcal,
+      energyKj,
       carbohydrates,
       sugars,
       dietaryFiber,
@@ -206,7 +232,8 @@ export async function PATCH(
         attribute: {
           createMany: {
             data: [{
-              energy,
+              energyKcal,
+              energyKj,
               carbohydrates,
               sugars,
               dietaryFiber,
