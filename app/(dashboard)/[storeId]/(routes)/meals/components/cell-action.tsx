@@ -16,10 +16,10 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 
-import { ProductColumn } from "./columns";
+import { MealColumn } from "./columns";
 
 interface CellActionProps {
-  data: ProductColumn;
+  data: MealColumn;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({
