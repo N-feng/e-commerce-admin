@@ -18,7 +18,6 @@ const ProductPage = async ({
       minerals: true,
     }
   });
-    console.log('product: ', product);
 
   const categories = await prismadb.category.findMany({
     where: {
