@@ -199,8 +199,8 @@ export async function GET(
       include: {
         images: true,
         category: true,
-        // kitchen: true,
-        // cuisine: true,
+        kitchen: true,
+        cuisine: true,
         // color: true,
         // size: true,
       },

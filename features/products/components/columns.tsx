@@ -8,7 +8,6 @@ import { ColumnDef } from "@tanstack/react-table"
 export type ProductColumn = {
   id: string
   name: string;
-  chineseName: string;
   price: string;
   category: string;
   // size: string;
