@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { ProductColumn } from "../components/columns";
 
 type OpenProductsState = {
   isOpen: boolean;

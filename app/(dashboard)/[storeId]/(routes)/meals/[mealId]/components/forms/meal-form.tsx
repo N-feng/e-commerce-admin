@@ -1,14 +1,11 @@
 "use client"
-
-import { Plus } from "lucide-react";
 import * as z from "zod"
 import axios from "axios"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useFieldArray, useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
-import { Trash } from "lucide-react"
-import { Category, Color, Cuisine, Kitchen, Meal, Size } from "@prisma/client"
+import { Color, Meal } from "@prisma/client"
 import { useParams, useRouter } from "next/navigation"
 
 import { Input } from "@/components/ui/input"
@@ -31,9 +28,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Separator } from "@/components/ui/separator"
-import { Heading } from "@/components/ui/heading"
-import { AlertModal } from "@/components/modals/alert-modal"
 import { MultiUploader } from "@/components/mulit-uploader"
 import { useProductModal } from "@/hooks/use-product-modal";
 import { useOpenProducts } from "@/features/products/hooks/use-open-products";
@@ -51,38 +45,41 @@ const formSchema = z.object({
   cuisineId: z.string().min(1),
   isFeatured: z.boolean().default(false).optional(),
   isArchived: z.boolean().default(false).optional(),
-  products: z.object({ weight: z.string() }).array().min(1)
+  products: z.object({ weight: z.string().min(1) }).array().min(1)
 });
 
 type MealFormValues = z.infer<typeof formSchema>
 
 interface MealFormProps {
   initialData: Meal | null;
-  categories: Category[];
+  // categories: Category[];
   colors: Color[];
-  sizes: Size[];
-  kitchens: Kitchen[];
-  cuisines: Cuisine[];
+  // sizes: Size[];
+  // kitchens: Kitchen[];
+  // cuisines: Cuisine[];
+};
+
+type FormValues = {
+  products: {
+    weight: string;
+  }[];
 };
 
 export const MealForm: React.FC<MealFormProps> = ({
   initialData,
-  categories,
-  sizes,
-  kitchens,
-  cuisines,
+  // categories,
+  // sizes,
+  // kitchens,
+  // cuisines,
   colors,
 }) => {
   const productModal = useProductModal();
-  const { onOpen } = useOpenProducts()
   const params = useParams();
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const title = initialData ? 'Edit meal' : 'Create meal';
-  const description = initialData ? 'Edit a meal.' : 'Add a new meal';
   const toastMessage = initialData ? 'Meal updated.' : 'Meal created.';
   const action = initialData ? 'Save changes' : 'Create';
 
@@ -99,6 +96,9 @@ export const MealForm: React.FC<MealFormProps> = ({
     sizeId: '',
     isFeatured: false,
     isArchived: false,
+    products: [
+      // { weight: '111' }
+    ]
   }
 
   const form = useForm<MealFormValues>({
@@ -106,10 +106,10 @@ export const MealForm: React.FC<MealFormProps> = ({
     defaultValues
   });
 
-  // const { fields, append } = useFieldArray({
-  //   control: form.control,
-  //   name: "products",
-  // });
+  const { fields, append } = useFieldArray({
+    control: form.control,
+    name: "products",
+  });
 
   const onSubmit = async (data: MealFormValues) => {
     const values = {
@@ -134,52 +134,12 @@ export const MealForm: React.FC<MealFormProps> = ({
     }
   };
 
-  const onDelete = async () => {
-    try {
-      setLoading(true);
-      await axios.delete(`/api/${params.storeId}/products/${params.productId}`);
-      router.refresh();
-      router.push(`/${params.storeId}/products`);
-      toast.success('Product deleted.');
-    } catch (error: any) {
-      toast.error('Something went wrong.');
-    } finally {
-      setLoading(false);
-      setOpen(false);
-    }
-  }
-
   // const onSelect = (values: any) => {
   //   setProducts(values)
   // }
 
   return (
     <>
-      <AlertModal 
-        isOpen={open} 
-        onClose={() => setOpen(false)}
-        onConfirm={onDelete}
-        loading={loading}
-      />
-      <div className="flex items-center justify-between">
-        <Heading title={title} description={description} />
-        <Button onClick={onOpen}>
-          <Plus className="mr-2 h-4 w-4" /> Add Product
-        </Button>
-        {/* <DialogProducts products={products} /> */}
-        {/* <ProductsDialog onSelect={onSelect} /> */}
-        {initialData && (
-          <Button
-            disabled={loading}
-            variant="destructive"
-            size="sm"
-            onClick={() => setOpen(true)}
-          >
-            <Trash className="h-4 w-4" />
-          </Button>
-        )}
-      </div>
-      <Separator />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
           {/* <FormField
@@ -219,12 +179,7 @@ export const MealForm: React.FC<MealFormProps> = ({
               )}
             />
           </div>
-          {/* <ProductTable 
-            data={products} 
-            loading={loading} 
-            form={form} 
-          /> */}
-          {/* <Table>
+          <Table>
             <TableCaption>A list of your recent invoices.</TableCaption>
             <TableHeader>
               <TableRow>
@@ -241,23 +196,25 @@ export const MealForm: React.FC<MealFormProps> = ({
                   <TableCell>{product.chineseName}</TableCell>
                   <TableCell>{product.category}</TableCell>
                   <TableCell className="text-right">
-                    {product.cuisine}
+                    {/* {product.cuisine} */}
 
-                    <div className="md:grid md:grid-cols-3 gap-8">
+                    {/* <div className="md:grid md:grid-cols-3 gap-8"> */}
                       <FormField
                         control={form.control}
-                        name={`weight.[${key}]`}
+                        name={`products.${index}.weight`}
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Name</FormLabel>
+                            {/* <FormLabel>Name</FormLabel> */}
                             <FormControl>
-                              <Input disabled={loading} placeholder="Product weight" {...field} />
+                              <Input disabled={loading} placeholder="Product weight" {...form.register(`products.${index}.weight` as const, {
+                                required: true
+                              })} className="w-[150px] inline-block text-right" />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
-                    </div>
+                    {/* </div> */}
                   </TableCell>
                 </TableRow>
               ))}
@@ -268,7 +225,7 @@ export const MealForm: React.FC<MealFormProps> = ({
                 <TableCell className="text-right">$2,500.00</TableCell>
               </TableRow>
             </TableFooter>
-          </Table> */}
+          </Table>
           <Button disabled={loading} className="ml-auto" type="submit">
             {action}
           </Button>

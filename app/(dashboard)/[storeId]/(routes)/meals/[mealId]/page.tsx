@@ -1,13 +1,19 @@
 import prismadb from "@/lib/prismadb";
 
-import { MealForm } from "./components/meal-form";
+import MealEditor from "./components/meal-editor";
+import { ProductColumn } from "./components/table/columns";
+import { formatter } from "@/lib/utils";
+import { format } from "date-fns";
+interface PageProps {
+  params: { mealId: string, storeId: string };
+  searchParams: Promise<{ mealId?: string }>;
+}
 
-const MealPage = async ({
-  params
-}: {
-  params: { mealId: string, storeId: string }
-}) => {
-  const meal = params.mealId === 'new' ? null : await prismadb.meal.findUnique({
+const MealPage = async ({ params, searchParams }: PageProps) => {
+
+  const { mealId } = await searchParams;
+  
+  const mealToEdit = mealId ? await prismadb.meal.findUnique({
     where: {
       id: params.mealId,
     },
@@ -17,7 +23,7 @@ const MealPage = async ({
       // vitamins: true,
       // minerals: true,
     }
-  });
+  }) : null;
 
   const categories = await prismadb.category.findMany({
     where: {
@@ -49,16 +55,48 @@ const MealPage = async ({
     },
   });
 
+  const products = await prismadb.product.findMany({
+    where: {
+      storeId: params.storeId
+    },
+    include: {
+      category: true,
+      // size: true,
+      // color: true,
+      kitchen: true,
+      cuisine: true,
+    },
+    orderBy: {
+      createdAt: 'desc'
+    }
+  });
+
+  const formattedProducts: ProductColumn[] = (products || []).map((item: any) => ({
+    id: item.id,
+    name: item.name,
+    chineseName: item.chineseName,
+    isFeatured: item.isFeatured,
+    isArchived: item.isArchived,
+    price: formatter.format(Number(item.price)),
+    category: item.category.name,
+    // size: item.size.name,
+    // color: item.color.value,
+    kitchen: item.kitchen.value,
+    cuisine: item.cuisine.value,
+    createdAt: format(item.createdAt, 'MMMM do, yyyy'),
+  }));
+
   return ( 
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <MealForm 
+        <MealEditor 
           categories={categories} 
           colors={colors}
           sizes={sizes}
           kitchens={kitchens}
           cuisines={cuisines}
-          initialData={meal}
+          products={formattedProducts}
+          initialData={mealToEdit}
         />
       </div>
     </div>

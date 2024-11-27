@@ -11,18 +11,37 @@ import {
 import { ProductColumn } from "./columns"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { useForm, useFieldArray, useWatch, Control } from "react-hook-form";
+import { EditorFormProps } from "../types";
 
-type Props = {
-  data: ProductColumn[];
-  loading: boolean;
-  form: any;
-}
+type FormValues = {
+  cart: {
+    name: string;
+    price: number;
+    quantity: number;
+    weight: string;
+  }[];
+};
 
 export function ProductTable({
-  data,
-  loading,
-  form,
-}: Props) {
+  mealData
+}: EditorFormProps) {
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<FormValues>({
+    defaultValues: {
+      cart: [{ name: "test", quantity: 1, price: 23, weight: '111' }]
+    },
+    mode: "onBlur"
+  });
+  const { fields, append, remove } = useFieldArray({
+    name: "cart",
+    control
+  });
+  const onSubmit = (data: FormValues) => console.log(data);
   return (
     <Table>
       <TableCaption>A list of your recent invoices.</TableCaption>
@@ -35,29 +54,16 @@ export function ProductTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {data.map((product, key) => (
-          <TableRow key={product.id}>
-            <TableCell className="font-medium">{product.name}</TableCell>
-            <TableCell>{product.chineseName}</TableCell>
-            <TableCell>{product.category}</TableCell>
+        {mealData.products?.map((field: any, index: any) => (
+          <TableRow key={field.name}>
+            <TableCell className="font-medium">{field.name}</TableCell>
+            <TableCell>{field.quantity}</TableCell>
+            <TableCell>{field.price}</TableCell>
             <TableCell className="text-right">
               {/* {product.cuisine} */}
-
-              {/* <div className="md:grid md:grid-cols-3 gap-8"> */}
-                <FormField
-                  control={form.control}
-                  name={`weight.[${key}]`}
-                  render={({ field }) => (
-                    <FormItem>
-                      {/* <FormLabel>Name</FormLabel> */}
-                      <FormControl>
-                        <Input disabled={loading} placeholder="Product weight" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              {/* </div> */}
+              <Input placeholder="Product weight" {...register(`cart.${index}.weight` as const, {
+                required: true
+              })} className="w-[100px] inline-block text-right" />
             </TableCell>
           </TableRow>
         ))}

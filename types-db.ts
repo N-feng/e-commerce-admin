@@ -19,14 +19,14 @@ export interface Products {
 export interface Category {
   id: string;
   billboardId: string;
-  billboardLabel: string;
+  // billboardLabel: string;
   name: string;
 }
 
 export interface Size {
   id: string;
   name: string;
-  value: string;
+  value: number;
 }
 
 export interface Kitchen {

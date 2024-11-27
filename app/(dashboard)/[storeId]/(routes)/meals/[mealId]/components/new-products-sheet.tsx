@@ -1,13 +1,4 @@
-"use client"
-
-import { z } from "zod";
-
-// import { insertCategorySchema } from "@/db/schema";
-
-// import { UseNewCategory } from "@/features/categories/hooks/use-new-category";
-// import { useCreateCategory } from "@/features/categories/api/use-create-category";
-
-import * as React from "react"
+import * as React from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -19,10 +10,11 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal, Plus } from "lucide-react"
+} from "@tanstack/react-table";
+import { ArrowUpDown, ChevronDown, MoreHorizontal, Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import {
   Sheet,
   SheetClose,
@@ -50,22 +42,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Input } from "@/components/ui/input"
-import { useGetAccounts } from "../api/use-get-products";
-import { useParams } from "next/navigation";
 
-import { ProductColumn, columnDefaultVisibility, columns } from "./columns";
-import { useOpenProducts } from "../hooks/use-open-products";
-// import { CategoryForm } from "@/features/categories/components/category-form";
+import { ProductColumn, columnDefaultVisibility, columns } from "./table/columns";
+import { EditorFormProps } from "./types";
 
-// const formSchema = insertCategorySchema.pick({ name: true });
+export const NewProductsSheet = ({
+  products,
+  mealData,
+  setMealData,
+}: {
+  products: ProductColumn[]
+} & EditorFormProps) => {
+  const [open, setOpen] = React.useState(false);
 
-// type FormValues = z.input<typeof formSchema>;
-
-export const NewProductsSheet = () => {
-  const { isOpen, onClose } = useOpenProducts();
-
-  // const mutation = useCreateCategory();
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -73,8 +62,6 @@ export const NewProductsSheet = () => {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>(columnDefaultVisibility)
   const [rowSelection, setRowSelection] = React.useState({})
-  const params = useParams();
-  const { data: products } = useGetAccounts(params.storeId as string)
 
   const table = useReactTable({
     data: products || [],
@@ -96,33 +83,30 @@ export const NewProductsSheet = () => {
   })
 
   const onSubmit = (values: any) => {
-
     const productsSelected = table.getFilteredSelectedRowModel().rows.map((item) => item.original)
     console.log('productsSelected: ', productsSelected);
-      console.log('!productsSelected.length: ', !productsSelected.length);
     if (!productsSelected.length) {
       return;
     }
-      // onAdd(productsSelected);
-    // mutation.mutate(values, {
-    //   onSuccess: () => {
-      onClose();
-    //   },
-    // });
+    setMealData({
+      ...mealData,
+      products: productsSelected
+    });
+    setOpen(false);
   };
 
   return (
-    <Sheet open={isOpen} onOpenChange={onClose}>
-      {/* <SheetTrigger asChild>
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger asChild>
         <Button>
           <Plus className="mr-2 h-4 w-4" /> Add Product
         </Button>
-      </SheetTrigger> */}
+      </SheetTrigger>
       <SheetContent side={"top"} className="space-y-4">
         <SheetHeader>
           <SheetTitle>Select Products</SheetTitle>
           <SheetDescription>
-            Create a new category to organize your transactions
+            Add a new products to organize your diet
           </SheetDescription>
         </SheetHeader>
 
@@ -244,7 +228,6 @@ export const NewProductsSheet = () => {
             <Button type="submit" onClick={onSubmit}>Save changes</Button>
           {/* </SheetClose> */}
         </SheetFooter>
-        {/* <CategoryForm onSubmit={onSubmit} disabled={mutation.isPending} /> */}
       </SheetContent>
     </Sheet>
   );
