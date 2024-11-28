@@ -43,15 +43,17 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-import { ProductColumn, columnDefaultVisibility, columns } from "./table/columns";
+import { ProductColumn, columnDefaultVisibility, columns } from "./columns";
 import { EditorFormProps } from "./types";
 
 export const NewProductsSheet = ({
   products,
+  setProducts,
   mealData,
   setMealData,
 }: {
   products: ProductColumn[]
+  setProducts: (values: ProductColumn[]) => void
 } & EditorFormProps) => {
   const [open, setOpen] = React.useState(false);
 
@@ -84,14 +86,15 @@ export const NewProductsSheet = ({
 
   const onSubmit = (values: any) => {
     const productsSelected = table.getFilteredSelectedRowModel().rows.map((item) => item.original)
-    console.log('productsSelected: ', productsSelected);
+    // console.log('productsSelected: ', productsSelected);
     if (!productsSelected.length) {
       return;
     }
-    setMealData({
-      ...mealData,
-      products: productsSelected
-    });
+    // setMealData({
+    //   ...mealData,
+    //   products: productsSelected
+    // });
+    setProducts(productsSelected);
     setOpen(false);
   };
 

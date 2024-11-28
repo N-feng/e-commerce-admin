@@ -1,7 +1,7 @@
 import prismadb from "@/lib/prismadb";
 
 import MealEditor from "./components/meal-editor";
-import { ProductColumn } from "./components/table/columns";
+import { ProductColumn } from "./components/columns";
 import { formatter } from "@/lib/utils";
 import { format } from "date-fns";
 interface PageProps {
@@ -10,20 +10,25 @@ interface PageProps {
 }
 
 const MealPage = async ({ params, searchParams }: PageProps) => {
+  console.log('searchParams: ', searchParams);
+  console.log('params: ', params);
 
   const { mealId } = await searchParams;
+  console.log('mealId: ', mealId);
   
   const mealToEdit = mealId ? await prismadb.meal.findUnique({
     where: {
-      id: params.mealId,
+      id: mealId,
     },
     include: {
       // images: true,
       // attribute: true,
       // vitamins: true,
       // minerals: true,
+      mealItems: true,
     }
   }) : null;
+    console.log('mealToEdit: ', mealToEdit);
 
   const categories = await prismadb.category.findMany({
     where: {
@@ -96,7 +101,7 @@ const MealPage = async ({ params, searchParams }: PageProps) => {
           kitchens={kitchens}
           cuisines={cuisines}
           products={formattedProducts}
-          initialData={mealToEdit}
+          mealToEdit={mealToEdit}
         />
       </div>
     </div>

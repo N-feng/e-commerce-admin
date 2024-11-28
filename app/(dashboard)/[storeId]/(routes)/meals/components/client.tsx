@@ -25,7 +25,7 @@ export const MealsClient: React.FC<MealsClientProps> = ({
     <> 
       <div className="flex items-center justify-between">
         <Heading title={`Meals (${data.length})`} description="Manage meals for your store" />
-        <Button onClick={() => router.push(`/${params.storeId}/meals/new`)}>
+        <Button onClick={() => router.push(`/${params.storeId}/meals/editor`)}>
           <Plus className="mr-2 h-4 w-4" /> Add New
         </Button>
       </div>

@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { ProductColumn } from "./columns"
+import { ProductColumn } from "../columns"
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { useForm, useFieldArray, useWatch, Control } from "react-hook-form";
