@@ -63,7 +63,19 @@ export const NewProductsSheet = ({
   )
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>(columnDefaultVisibility)
-  const [rowSelection, setRowSelection] = React.useState({})
+  const defaultSelected = products.map((item, index) => ({ ...item, index })).reduce((allProducts, product) => {
+    const selected = mealData.mealItems?.some((meal: any) => meal.productId === product.id)
+    if (selected) {
+      return {
+        ...allProducts,
+        [product.index]: selected
+      }
+    }
+    return {
+      ...allProducts
+    }
+  }, {})
+  const [rowSelection, setRowSelection] = React.useState(defaultSelected)
 
   const table = useReactTable({
     data: products || [],
@@ -85,16 +97,20 @@ export const NewProductsSheet = ({
   })
 
   const onSubmit = (values: any) => {
-    const productsSelected = table.getFilteredSelectedRowModel().rows.map((item) => item.original)
-    // console.log('productsSelected: ', productsSelected);
-    if (!productsSelected.length) {
+    const productsSelected = table.getFilteredSelectedRowModel().rows.map((item) => item.original);
+    
+    const filterProducts = productsSelected.filter((item) => {
+      return !mealData.mealItems.some((meal: any) => meal.productId === item.id)
+    });
+
+    if (!filterProducts.length) {
       return;
     }
     // setMealData({
     //   ...mealData,
     //   products: productsSelected
     // });
-    setProducts(productsSelected);
+    setProducts(filterProducts);
     setOpen(false);
   };
 

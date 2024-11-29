@@ -9,7 +9,10 @@ export function mapToResumeValues (data: MealServerData): MealValues {
       id: meal.id,
       productId: meal.productId,
       mealId: meal.mealId,
-      weight: meal.weight
+      weight: meal.weight,
+      name: meal.product.name,
+      chineseName: meal.product.chineseName,
+      category: meal.product.category.name
     }))
   }
 }

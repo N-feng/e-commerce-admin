@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+export const optionalString = z.string().min(1).optional();
+
 export const mealSchema = z.object({
   name: z.string().min(1).optional(),
   // chineseName: z.string().min(1),
@@ -17,7 +19,11 @@ export const mealSchema = z.object({
   mealItems: z
     .array(
       z.object({
-        weight: z.string().min(1).optional()
+        weight: optionalString,
+        name: optionalString,
+        chineseName: optionalString,
+        category: optionalString,
+        productId: optionalString,
       })
     )
     .optional()

@@ -10,11 +10,7 @@ interface PageProps {
 }
 
 const MealPage = async ({ params, searchParams }: PageProps) => {
-  console.log('searchParams: ', searchParams);
-  console.log('params: ', params);
-
   const { mealId } = await searchParams;
-  console.log('mealId: ', mealId);
   
   const mealToEdit = mealId ? await prismadb.meal.findUnique({
     where: {
@@ -25,10 +21,17 @@ const MealPage = async ({ params, searchParams }: PageProps) => {
       // attribute: true,
       // vitamins: true,
       // minerals: true,
-      mealItems: true,
+      mealItems: {
+        include: {
+          product: {
+            include: {
+              category: true,
+            }
+          }
+        }
+      },
     }
   }) : null;
-    console.log('mealToEdit: ', mealToEdit);
 
   const categories = await prismadb.category.findMany({
     where: {

@@ -6,7 +6,15 @@ export interface EditorFormProps {
 }
 
 export const resumeDataInclude = {
-  mealItems: true,
+  mealItems: {
+    include: {
+      product: {
+        include: {
+          category: true
+        }
+      },
+    }
+  },
 } satisfies Prisma.MealInclude;
 
 export type MealServerData = Prisma.MealGetPayload<{

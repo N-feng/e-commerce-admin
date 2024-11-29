@@ -20,6 +20,16 @@ export type ProductColumn = {
   isArchived: boolean;
 }
 
+export type MealItemsColumn = {
+  category: string;
+  chineseName: string;
+  id: string;
+  mealId: string;
+  name: string;
+  productId: string;
+  weight: string;
+}
+
 export const columns: ColumnDef<ProductColumn>[] = [
 
   {

@@ -229,14 +229,17 @@ model Meal {
 
 // Intermediary for a many-to-many relationship
 model MealItem {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  mealId      String    @db.ObjectId // Foreign Key to Order
-  meal        Meal      @relation(fields: [mealId], references: [id])
-  productId   String    @db.ObjectId // Foreign Key to Product
-  product     Product   @relation(fields: [productId], references: [id])
-  // recipeId  String  @db.ObjectId // Foreign Key to Product
-  // recipe    Recipe  @relation(fields: [recipeId], references: [id])
-  weight      String
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  mealId          String    @db.ObjectId // Foreign Key to Order
+  meal            Meal      @relation(fields: [mealId], references: [id], onDelete: Cascade)
+  productId       String    @db.ObjectId // Foreign Key to Product
+  product         Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  // recipeId     String  @db.ObjectId // Foreign Key to Product
+  // recipe       Recipe  @relation(fields: [recipeId], references: [id])
+  weight          String
+  name            String
+  chineseName     String
+  category        String
 
   @@index([mealId])
   @@index([productId])

@@ -40,6 +40,7 @@ import { mealSchema, MealValues } from "./validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MealServerData } from "./types";
 import { mapToResumeValues } from "./utils";
+import { CellAction } from "./cell-action";
 
 interface MealEditorProps {
   // initialData: Meal | null;
@@ -72,15 +73,15 @@ const MealEditor = ({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   
-  const title = mealData.id ? 'Edit meal' : 'Create meal';
-  const description = mealData.id ? 'Edit a meal.' : 'Add a new meal';
-  const toastMessage = mealData.id ? 'Meal updated.' : 'Meal created.';
-  const action = mealData.id ? 'Save changes' : 'Create';
+  const title = mealToEdit ? 'Edit meal' : 'Create meal';
+  const description = mealToEdit ? 'Edit a meal.' : 'Add a new meal';
+  const toastMessage = mealToEdit ? 'Meal updated.' : 'Meal created.';
+  const action = mealToEdit ? 'Save changes' : 'Create';
 
   const form = useForm<MealValues>({
     resolver: zodResolver(mealSchema),
     defaultValues: {
-      name: '',
+      name: mealData.name || '',
       mealItems: mealData.mealItems || []
     }
   });
@@ -118,10 +119,13 @@ const MealEditor = ({
   }
 
   const setProducts = (values: ProductColumn[]) => {
-    // console.log('values: ', values);
     append(values.map((item) => {
       return {
-        ...item,
+        // ...item,
+        productId: item.id,
+        name: item.name,
+        chineseName: item.chineseName,
+        category: item.category,
         weight: ''
       }
     }));
@@ -135,16 +139,14 @@ const MealEditor = ({
     }
     try {
       setLoading(true);
-      // if (initialData) {
-      //   await axios.patch(`/api/${params.storeId}/products/${params.productId}`, values);
-      console.log('values: ', values);
-      console.log('mealData: ', mealData);
-      // } else {
+      if (mealToEdit) {
+        await axios.patch(`/api/${params.storeId}/meals/${mealToEdit.id}`, values);
+      } else {
         await axios.post(`/api/${params.storeId}/meals`, mealData);
-      // }
+      }
       router.refresh();
       router.push(`/${params.storeId}/meals`);
-      // toast.success(toastMessage);
+      toast.success(toastMessage);
     } catch (error: any) {
       toast.error('Something went wrong.');
     } finally {
@@ -162,13 +164,7 @@ const MealEditor = ({
       />
       <header className="flex items-center justify-between">
         <Heading title={title} description={description} />
-        <NewProductsSheet 
-          products={products} 
-          setProducts={setProducts}
-          mealData={mealData}
-          setMealData={setMealData} 
-        />
-        {mealData.id && (
+        {mealToEdit && (
           <Button
             disabled={loading}
             variant="destructive"
@@ -227,6 +223,7 @@ const MealEditor = ({
                 <TableHead>ChineseName</TableHead>
                 <TableHead>Category</TableHead>
                 <TableHead className="text-right">Weight(g)</TableHead>
+                <TableHead className="text-right">Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -242,10 +239,17 @@ const MealEditor = ({
               ))}
             </TableBody>
           </Table>
-          <Button disabled={loading} className="ml-auto" type="submit">
-            {/* {action} */}
-            Submit
-          </Button>
+          <div className="flex items-center justify-between">
+            <Button disabled={loading} className="ml-auto1" type="submit">
+              {action}
+            </Button>
+            <NewProductsSheet 
+              products={products} 
+              setProducts={setProducts}
+              mealData={mealData}
+              setMealData={setMealData} 
+            />
+          </div>
         </form>
       </Form>
     </>
@@ -281,6 +285,12 @@ function ProductItem({ id, form, index, remove, field }: ProductItemProps) {
               <FormMessage />
             </FormItem>
           )}
+        />
+      </TableCell>
+      <TableCell className="text-right">
+        <CellAction 
+          data={field} 
+          handleDel={(id) => remove(index)}
         />
       </TableCell>
     </TableRow>
