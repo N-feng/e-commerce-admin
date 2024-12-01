@@ -16,8 +16,7 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 
-import { MealItemsColumn } from "./columns";
-
+import { MealItemsColumn } from "@/features/products/components/products-table/columns";
 interface CellActionProps {
   data: MealItemsColumn;
   handleDel: (id: string) => void;
@@ -29,8 +28,6 @@ export const CellAction: React.FC<CellActionProps> = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const router = useRouter();
-  const params = useParams();
 
   const onConfirm = async () => {
     try {

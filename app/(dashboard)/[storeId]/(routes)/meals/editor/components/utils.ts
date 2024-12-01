@@ -5,7 +5,7 @@ export function mapToResumeValues (data: MealServerData): MealValues {
   return {
     id: data.id,
     name: data.name,
-    mealItems: data.mealItems.map((meal) => ({
+    mealItems: data.mealItems?.map((meal) => ({
       id: meal.id,
       productId: meal.productId,
       mealId: meal.mealId,

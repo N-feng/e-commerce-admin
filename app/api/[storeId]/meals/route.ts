@@ -53,3 +53,36 @@ export async function POST(
 
   return NextResponse.json(order);
 };
+
+export async function GET(
+  req: Request,
+  { params }: { 
+    params: { 
+      categoryId: string,
+      sizeId: string,
+      kitchenId: string,
+      cuisineId: string,
+      storeId: string,
+    } 
+  },
+) {
+  try {
+    if (!params.storeId) {
+      return new NextResponse("Store id is required", { status: 400 });
+    }
+
+    const meals = await prismadb.meal.findMany({
+      where: {
+        storeId: params.storeId
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+  
+    return NextResponse.json(meals);
+  } catch (error) {
+    console.log('[MEALS_GET]', error);
+    return new NextResponse("Internal error", { status: 500 });
+  }
+};

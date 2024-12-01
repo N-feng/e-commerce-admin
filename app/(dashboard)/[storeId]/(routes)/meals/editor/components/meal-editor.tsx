@@ -13,7 +13,6 @@ import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { AlertModal } from "@/components/modals/alert-modal";
 import {
   Form,
   FormControl,
@@ -32,34 +31,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { AlertModal } from "@/components/modals/alert-modal";
+import { MultiUploader } from "@/components/mulit-uploader";
 
-import { NewProductsSheet } from "./new-products-sheet";
-import { ProductColumn } from "./columns";
+import { NewProductsSheet } from "@/features/products/components/new-products-sheet";
 import { mealSchema, MealValues } from "./validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MealServerData } from "./types";
 import { mapToResumeValues } from "./utils";
 import { CellAction } from "./cell-action";
+import { ProductColumn } from "./columns";
 
 interface MealEditorProps {
-  // initialData: Meal | null;
-  categories: Category[];
-  colors: Color[];
-  sizes: Size[];
-  kitchens: Kitchen[];
-  cuisines: Cuisine[];
-  products: ProductColumn[]; 
   mealToEdit: MealServerData | null;
 };
 
 const MealEditor = ({
-  // initialData,
-  categories,
-  sizes,
-  kitchens,
-  cuisines,
-  colors,
-  products,
   mealToEdit
 }: MealEditorProps) => {
   const params = useParams();
@@ -243,10 +230,8 @@ const MealEditor = ({
               {action}
             </Button>
             <NewProductsSheet 
-              products={products} 
+              selectIds={(mealData.mealItems || []).map(item => item.productId || "")}
               setProducts={setProducts}
-              mealData={mealData}
-              setMealData={setMealData} 
             />
           </div>
         </form>

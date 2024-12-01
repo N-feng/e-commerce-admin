@@ -7,7 +7,7 @@ import { formatter } from "@/lib/utils";
 
 import { ProductsClient } from "./components/client";
 import { ProductColumn } from "./components/columns";
-import { useGetAccounts } from "@/features/products/api/use-get-products";
+import { useGetProducts } from "@/features/products/api/use-get-products";
 
 const ProductsPage = ({
   params
@@ -30,7 +30,7 @@ const ProductsPage = ({
   //   }
   // });
 
-  const { data: products } = useGetAccounts(params.storeId)
+  const { data: products } = useGetProducts()
   
 
   // const formattedProducts: ProductColumn[] = (products || []).map((item: any) => ({

@@ -31,7 +31,6 @@ export type MealItemsColumn = {
 }
 
 export const columns: ColumnDef<ProductColumn>[] = [
-
   {
     id: "select",
     header: ({ table }) => (
@@ -109,8 +108,3 @@ export const columns: ColumnDef<ProductColumn>[] = [
   //   cell: ({ row }) => <CellAction data={row.original} />
   // },
 ];
-
-export const columnDefaultVisibility = {
-  isArchived: false,
-  isFeatured: false,
-}

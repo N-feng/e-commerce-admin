@@ -137,3 +137,50 @@ export const DELETE = async (
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 };
+
+export async function GET(
+  req: Request,
+  { params }: { 
+    params: { 
+      categoryId: string,
+      sizeId: string,
+      kitchenId: string,
+      cuisineId: string,
+      storeId: string,
+      mealId: string
+    } 
+  },
+) {
+  try {
+    if (!params.mealId) {
+      return new NextResponse("Meal id is required", { status: 400 });
+    }
+
+    const meal = await prismadb.meal.findUnique({
+      where: {
+        storeId: params.storeId,
+        id: params.mealId,
+      },
+      include: {
+        // images: true,
+        // attribute: true,
+        // vitamins: true,
+        // minerals: true,
+        mealItems: {
+          include: {
+            product: {
+              include: {
+                category: true,
+              }
+            }
+          }
+        },
+      }
+    });
+
+    return NextResponse.json(meal);
+  } catch(error) {
+    console.log('[MEAL_GET]', error);
+    return new NextResponse("Internal error", { status: 500 });
+  }
+}
