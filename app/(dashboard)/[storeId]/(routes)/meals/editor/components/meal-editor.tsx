@@ -35,12 +35,12 @@ import { AlertModal } from "@/components/modals/alert-modal";
 import { MultiUploader } from "@/components/mulit-uploader";
 
 import { NewProductsSheet } from "@/features/products/components/new-products-sheet";
+import { ProductColumn } from "@/features/products/components/products-table/columns";
 import { mealSchema, MealValues } from "./validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MealServerData } from "./types";
 import { mapToResumeValues } from "./utils";
 import { CellAction } from "./cell-action";
-import { ProductColumn } from "./columns";
 
 interface MealEditorProps {
   mealToEdit: MealServerData | null;

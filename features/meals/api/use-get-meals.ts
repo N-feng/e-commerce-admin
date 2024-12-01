@@ -10,7 +10,7 @@ export const useGetMeals = () => {
     queryKey: ["meals"],
     queryFn: async () => {
       const response = await axios.get(`/api/${params.storeId}/meals`);
-      console.log('response: ', response);
+      console.log('get meals: ', response);
       return response.data;
     }
   })
