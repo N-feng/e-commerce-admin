@@ -1,8 +1,7 @@
 "use client";
 
-// import { CldUploadWidget } from 'next-cloudinary';
+import { CldUploadWidget } from 'next-cloudinary';
 import { twMerge } from 'tailwind-merge'
-import { UploadButton, UploadDropzone } from "@/lib/uploadthing";
 import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -31,18 +30,17 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   }, []);
 
   const onUpload = (result: any) => {
-    // onChange(result.info.secure_url);
-
-    onChange(result[0].url)
+    console.log('result: ', result);
+    onChange(result.info.secure_url);
   };
 
   const onDelete = async (url: string) => {
     onRemove(url);
-    await axios.post('/api/servers/deleteImage', {
-      imageUrl: url,
-    }).then(() => {
-      toast.success("Image Remove");
-    });
+    // await axios.post('/api/servers/deleteImage', {
+    //   imageUrl: url,
+    // }).then(() => {
+    //   toast.success("Image Remove");
+    // });
   }
 
   if (!isMounted) {
@@ -73,7 +71,26 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         </>
       ) : (
         <main className="flex">
-          <UploadDropzone
+          <CldUploadWidget onUpload={onUpload} uploadPreset="multi-store-e-commerce-app">
+            {({ open }) => {
+              const onClick = () => {
+                open();
+              };
+    
+              return (
+                <Button 
+                  type="button" 
+                  disabled={disabled} 
+                  variant="secondary" 
+                  onClick={onClick}
+                >
+                  <ImagePlus className="h-4 w-4 mr-2" />
+                  Upload an Image
+                </Button>
+              );
+            }}
+          </CldUploadWidget>
+          {/* <UploadDropzone
             className="bg-slate-800 ut-label:text-lg ut-allowed-content:ut-uploading:text-red-300"
             endpoint="imageUploader"
             onClientUploadComplete={(res) => {
@@ -87,7 +104,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
               alert(`ERROR! ${error.message}`);
             }}
             config={{ cn: twMerge }}
-          />
+          /> */}
 
           {/* <UploadButton
             endpoint="imageUploader"

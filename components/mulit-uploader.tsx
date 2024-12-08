@@ -20,6 +20,7 @@ interface ImageUploadProps {
   onChange: (value: string[]) => void;
   onRemove: (value: string) => void;
   value: string[];
+  endpoint?: string,
 }
 
 export const MultiUploader: React.FC<ImageUploadProps> = ({
@@ -27,6 +28,7 @@ export const MultiUploader: React.FC<ImageUploadProps> = ({
   onChange,
   onRemove,
   value,
+  endpoint = "productImage",
 }) => {
   const [isMounted, setIsMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);

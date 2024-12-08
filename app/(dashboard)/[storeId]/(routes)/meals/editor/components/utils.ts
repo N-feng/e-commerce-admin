@@ -13,6 +13,7 @@ export function mapToResumeValues (data: MealServerData): MealValues {
       name: meal.product.name,
       chineseName: meal.product.chineseName,
       category: meal.product.category.name
-    }))
+    })),
+    images: data.images,
   }
 }

@@ -15,6 +15,7 @@ export const resumeDataInclude = {
       },
     }
   },
+  images: true,
 } satisfies Prisma.MealInclude;
 
 export type MealServerData = Prisma.MealGetPayload<{

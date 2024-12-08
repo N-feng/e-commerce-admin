@@ -1,6 +1,15 @@
+import { Image } from "@prisma/client";
 import { z } from "zod";
 
 export const optionalString = z.string().min(1).optional();
+
+export const imageSchema = z.object({
+  images: z
+    .array(
+      z.string()
+    )
+    .optional()
+})
 
 export const mealSchema = z.object({
   name: z.string().min(1).optional(),
@@ -31,6 +40,7 @@ export const mealSchema = z.object({
 
 
 
-export type MealValues = z.infer<typeof mealSchema> & {
+export type MealValues = Omit<z.infer<typeof mealSchema>, "images"> & {
   id?: string;
+  images: Image[];
 }

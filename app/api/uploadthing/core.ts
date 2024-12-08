@@ -36,6 +36,13 @@ export const ourFileRouter = {
       console.log("Upload complete for userId:", userId);
       console.log("file url", file.url);
     }),
+  mealImage: f({
+        image: { maxFileSize: "4MB", maxFileCount: 5 },
+      }).onUploadComplete(async ({ metadata, file }) => {
+        const userId = (metadata as any).userId;
+        console.log("Upload complete for userId:", userId);
+        console.log("file url", file.url);
+      }),
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;

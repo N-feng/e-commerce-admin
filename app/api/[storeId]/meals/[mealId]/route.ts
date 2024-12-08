@@ -18,7 +18,8 @@ export const PATCH = async (
 
     const { isPaid, phone, address, order_status,
       name,
-      mealItems
+      mealItems,
+      images,
     } = body;
 
     // if (!order_status) {
@@ -55,6 +56,9 @@ export const PATCH = async (
         mealItems: {
           deleteMany: {}
         },
+        images: {
+          deleteMany: {}
+        }
       }
     })
 
@@ -83,6 +87,17 @@ export const PATCH = async (
             ]
           }
         },
+        images: {
+          createMany: {
+            data: [
+              ...images.map(({ url }: { url: string }) => ({
+                url: url,
+                userId,
+                // mealId: params.mealId,
+              }))
+            ]
+          }
+        }
       }
     })
 
@@ -175,6 +190,7 @@ export async function GET(
             }
           }
         },
+        images: true,
       }
     });
 

@@ -11,9 +11,9 @@ export const useGetProducts = () => {
   const query = useQuery({
     queryKey: ["products", { storeId }],
     queryFn: async () => {
-      const response = await axios.get(`/api/${storeId}/products`);
-      console.log('get products: ', response);
-      return response.data;
+      const {data} = await axios.get(`/api/${storeId}/products`);
+      console.log('get products data: ', data);
+      return data;
     },
   });
 

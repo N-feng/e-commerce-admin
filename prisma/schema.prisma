@@ -215,14 +215,15 @@ model RecipeItem {
 }
 
 model Meal {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  storeId     String    @db.ObjectId // Foreign Key to Store
-  store       Store     @relation("StoreToMeal", fields: [storeId], references: [id])
-  mealItems   MealItem[] // Relation to OrderItem model
-  name        String    @default("")
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  userId      String    @default("")
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  storeId     String        @db.ObjectId // Foreign Key to Store
+  store       Store         @relation("StoreToMeal", fields: [storeId], references: [id])
+  mealItems   MealItem[]    // Relation to OrderItem model
+  images      MealImage[]   // Relation to MealImage model
+  name        String        @default("")
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  userId      String        @default("")
 
   @@index([storeId])
 }
@@ -304,4 +305,16 @@ model Image {
   updatedAt   DateTime @updatedAt
 
   @@index([productId])
+}
+
+model MealImage {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  mealId      String   @db.ObjectId // Foreign Key to Meal
+  meal        Meal     @relation(fields: [mealId], references: [id], onDelete: Cascade)
+  url         String   // URL of the image
+  userId      String   @default("")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([mealId])
 }
