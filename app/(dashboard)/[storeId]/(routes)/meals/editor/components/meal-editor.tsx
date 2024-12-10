@@ -44,7 +44,8 @@ import { ProductColumn } from "@/features/products/components/products-table/col
 // import { MealServerData } from "./types";
 // import { mapToResumeValues } from "./utils";
 import { CellAction } from "./cell-action";
-import { useEditMeal } from "@/features/meals/api/use-edit.meal";
+import { useEditMeal } from "@/features/meals/api/use-edit-meal";
+import { useCreateMeal } from "@/features/meals/api/use-create-meal";
 
 export const optionalString = z.string().min(1).optional();
 
@@ -80,7 +81,7 @@ export const mealSchema = z.object({
         productId: optionalString,
       })
     )
-    .optional()
+    .min(1)
 });
 
 
@@ -142,6 +143,7 @@ const MealEditor = ({
   const [mealData, setMealData] = useState<MealValues>(
     mealToEdit ? mapToResumeValues(mealToEdit) : {
       images: [],
+      mealItems: [],
     }
   )
   
@@ -180,6 +182,7 @@ const MealEditor = ({
   });
 
   const mealMutation = useEditMeal(mealToEdit?.id)
+  const mutation = useCreateMeal()
 
   const onDelete = async () => {
     try {
@@ -221,7 +224,8 @@ const MealEditor = ({
         mealMutation.mutate(values);
         // await axios.patch(`/api/${params.storeId}/meals/${mealToEdit.id}`, values);
       } else {
-        await axios.post(`/api/${params.storeId}/meals`, mealData);
+        mutation.mutate(values);
+        // await axios.post(`/api/${params.storeId}/meals`, mealData);
       }
       router.refresh();
       router.push(`/${params.storeId}/meals`);
@@ -265,12 +269,12 @@ const MealEditor = ({
                 <FormLabel>Images</FormLabel>
                 <FormControl>
                   <>
-                    <ImageUpload 
+                    {/* <ImageUpload 
                       value={field.value.map((image) => image.url)} 
                       disabled={loading} 
                       onChange={(url) => field.onChange([...field.value, { url }])}
                       onRemove={(url) => field.onChange([...field.value.filter((current) => current.url !== url)])}
-                    />
+                    /> */}
                     {/* <MediaUploader 
                       onValueChange={field.onChange}
                       setImage={setImage}
@@ -278,14 +282,15 @@ const MealEditor = ({
                       image={image}
                       type={type}
                     /> */}
-                    {/* <MultiUploader 
+                    <MultiUploader 
+                      endpoint="mealImage"
                       value={field.value.map((image) => image.url)} 
                       disabled={loading} 
                       onChange={(urls) => {
                         field.onChange(urls.map((url) => ({ url })));
                       }}
                       onRemove={(url) => field.onChange([...field.value.filter((current) => current.url !== url)])}
-                    /> */}
+                    />
                   </>
                 </FormControl>
                 <FormMessage />
@@ -307,6 +312,17 @@ const MealEditor = ({
               )}
             />
           </div>
+          {/* <div className="md:grid md:grid-cols-3 gap-8"> */}
+            <FormField
+              control={form.control}
+              name="mealItems"
+              render={({ field }) => (
+                <FormItem>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          {/* </div> */}
           <Table>
             <TableCaption>A list of your recent products.</TableCaption>
             <TableHeader>

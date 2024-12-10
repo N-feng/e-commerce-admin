@@ -24,6 +24,7 @@ const ProductsPage = () => {
     kitchen: item.kitchen.value,
     cuisine: item.cuisine.value,
     createdAt: format(item.createdAt, 'MMMM do, yyyy'),
+    images: item.images,
   }));
 
   if (productsQuery.isLoading) {

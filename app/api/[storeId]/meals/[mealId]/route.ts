@@ -87,21 +87,32 @@ export const PATCH = async (
             ]
           }
         },
-        images: {
-          createMany: {
-            data: [
-              ...images.map(({ url }: { url: string }) => ({
-                url: url,
-                userId,
-                // mealId: params.mealId,
-              }))
-            ]
-          }
-        }
       }
     })
 
-    
+    if (images.length) {
+      await prismadb.meal.update({
+        where: {
+          id: params.mealId
+        },
+        data: {
+          name,
+          userId,
+          storeId: params.storeId,
+          images: {
+            createMany: {
+              data: [
+                ...images.map(({ url }: { url: string }) => ({
+                  url: url,
+                  userId,
+                  // mealId: params.mealId,
+                }))
+              ]
+            }
+          }
+        },
+      })
+    }
 
     return NextResponse.json(order);
   } catch (error) {

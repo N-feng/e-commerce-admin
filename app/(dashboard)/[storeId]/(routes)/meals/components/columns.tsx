@@ -14,24 +14,21 @@ export type MealColumn = {
   // color: string;
   // kitchen: string;
   // cuisine: string;
+  images: [];
   createdAt: string;
   // isFeatured: boolean;
   // isArchived: boolean;
 }
 
 export const columns: ColumnDef<MealColumn>[] = [
-  // {
-  //   accessorKey: "images",
-  //   header: "Images",
-  //   cell: ({ row }) => (
-  //     <div className="grid grid-cols-2 gap-2">
-  //       <CellImage data={row.original.images} />
-  //     </div>
-  //   ),
-  // },
   {
-    accessorKey: "products",
-    header: "Products",
+    accessorKey: "images",
+    header: "Images",
+    cell: ({ row }) => (
+      <div className="grid grid-cols-2 gap-2">
+        <CellImage data={row.original.images} />
+      </div>
+    ),
   },
   {
     accessorKey: "name",

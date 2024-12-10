@@ -24,25 +24,40 @@ export async function POST(
 
   const body = await req.json();
 
-  const { name, products } = body;
+  const { name, mealItems, images } = body;
 
   if (!userId) {
     return new NextResponse("Unauthenticated", { status: 403 });
   }
 
-  const order = await prismadb.meal.create({
+  const meal = await prismadb.meal.create({
     data: {
       // isPaid: false,
       // orderItems: products,
       name,
       mealItems: {
-        create: products.map((item: Product) => ({
-          product: {
-            connect: {
-              id: item.id
-            }
-          }
-        }))
+        // create: mealItems.map((item: Product) => ({
+        //   product: {
+        //     connect: {
+        //       id: item.id
+        //     }
+        //   }
+        // })),
+        createMany: {
+          data: [
+            ...mealItems.map((meal: { 
+              // id: string,
+              name: string,
+              chineseName: string,
+              // mealId: string,
+              productId: string,
+              weight: string,
+            }) => ({
+              ...meal,
+              // mealId: params.mealId
+            })),
+          ]
+        },
       },
       userId,
       // order_status: "Processing",
@@ -51,7 +66,31 @@ export async function POST(
     }
   });
 
-  return NextResponse.json(order);
+  if (images.length) {
+    await prismadb.meal.update({
+      where: {
+        id: meal.id
+      },
+      data: {
+        name,
+        userId,
+        storeId: params.storeId,
+        images: {
+          createMany: {
+            data: [
+              ...images.map(({ url }: { url: string }) => ({
+                url: url,
+                userId,
+                // mealId: params.mealId,
+              }))
+            ]
+          }
+        }
+      },
+    })
+  }
+
+  return NextResponse.json(meal);
 };
 
 export async function GET(
@@ -74,6 +113,9 @@ export async function GET(
     const meals = await prismadb.meal.findMany({
       where: {
         storeId: params.storeId
+      },
+      include: {
+        images: true,
       },
       orderBy: {
         createdAt: 'desc'

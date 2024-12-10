@@ -14,7 +14,7 @@ const MealPage = ({ params }: PageProps) => {
   const mealQuery = useGetMeal();
   const defaultValues = mealQuery.data
     ? mealQuery.data
-    : { mealItems: [] }
+    : null
 
   const isLoading = mealQuery.isLoading;
 

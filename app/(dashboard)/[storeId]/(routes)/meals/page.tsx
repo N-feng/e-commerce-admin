@@ -11,10 +11,11 @@ import { MealsClient } from "./components/client";
 const MealsPage = () => {
   const mealsQuery = useGetMeals();
 
-  const formattedMeals: MealColumn[] = (mealsQuery.data ?? []).map((item: Meal) => ({
+  const formattedMeals: MealColumn[] = (mealsQuery.data ?? []).map((item: any) => ({
     id: item.id,
     name: item.name,
     createdAt: format(item.createdAt, 'MMMM do, yyyy'),
+    images: item.images,
   }));
 
   if (mealsQuery.isLoading) {

@@ -20,7 +20,7 @@ interface ImageUploadProps {
   onChange: (value: string[]) => void;
   onRemove: (value: string) => void;
   value: string[];
-  endpoint?: string,
+  endpoint?: any,
 }
 
 export const MultiUploader: React.FC<ImageUploadProps> = ({
@@ -40,7 +40,7 @@ export const MultiUploader: React.FC<ImageUploadProps> = ({
     setFiles(acceptedFiles);
   }, []);
 
-  const { startUpload, routeConfig } = useUploadThing("productImage", {
+  const { startUpload, routeConfig } = useUploadThing(endpoint, {
     onClientUploadComplete: (res) => {
       // const files: File[] = Array.from(res || []);
 

@@ -6,7 +6,7 @@ import axios from "axios";
 import { useParams } from "next/navigation";
 import { MealValues } from "@/app/(dashboard)/[storeId]/(routes)/meals/editor/components/meal-editor";
 
-export const useEditMeal = (id?: string) => {
+export const useCreateMeal = () => {
   const queryClient = useQueryClient();
   const params = useParams();
   
@@ -14,12 +14,13 @@ export const useEditMeal = (id?: string) => {
 
   const mutation = useMutation<any, Error, MealValues>({
     mutationFn: async (json) => {
+      console.log('get json when create meal: ', json);
       // const response = await client.api.categories[":id"]["$patch"]({
       //   param: { id },
       //   json,
       // });
-      const {data} = await axios.patch(`/api/${params.storeId}/meals/${id}`, json);
-      console.log('edit meal data: ', data);
+      const {data} = await axios.post(`/api/${params.storeId}/meals/`, json);
+      console.log('create meal data: ', data);
       return data;
     },
     onSuccess: () => {

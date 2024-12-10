@@ -3,6 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table"
 
 import { CellAction } from "./cell-action"
+import CellImage from "./cell-image"
 
 export type ProductColumn = {
   id: string
@@ -13,12 +14,22 @@ export type ProductColumn = {
   // color: string;
   kitchen: string;
   cuisine: string;
+  images: [];
   createdAt: string;
   isFeatured: boolean;
   isArchived: boolean;
 }
 
 export const columns: ColumnDef<ProductColumn>[] = [
+  {
+    accessorKey: "images",
+    header: "Images",
+    cell: ({ row }) => (
+      <div className="grid grid-cols-2 gap-2">
+        <CellImage data={row.original.images} />
+      </div>
+    ),
+  },
   {
     accessorKey: "name",
     header: "Name",

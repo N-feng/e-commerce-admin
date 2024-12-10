@@ -9,6 +9,8 @@ import Image from 'next/image';
 import { ImagePlus, Trash } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { generateSHA1, generateSignature, getPublicIdFromUrl } from '@/lib/utils';
+import { useDeleteImage } from '@/features/mealImage/use-delete-meal-image';
 
 interface ImageUploadProps {
   disabled?: boolean;
@@ -35,7 +37,33 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   };
 
   const onDelete = async (url: string) => {
-    onRemove(url);
+    console.log('url: ', url);
+    // const publicId = getPublicIdFromUrl(url);
+    // const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!;
+    // console.log('cloudName: ', cloudName);
+    // const timestamp = new Date().getTime();
+    // const apiKey = process.env.CLOUDINARY_API_KEY!;
+    // console.log('process.env: ', process.env);
+    // console.log('apiKey: ', apiKey);
+    // const apiSecret = process.env.CLOUDINARY_API_SECRET!;
+    // console.log('apiSecret: ', apiSecret);
+    // const signature = generateSHA1(generateSignature(publicId as string, apiSecret));
+    // const api = `https://api.cloudinary.com/v1_1/${cloudName}/image/destroy`;
+
+    // const response = await axios.post(api, {
+    //   public_id: publicId,
+    //   signature: signature,
+    //   api_key: apiKey,
+    //   timestamp: timestamp,
+    // });
+    // console.log('response: ', response);
+    // console.log('publicId: ', publicId);
+    // onRemove(url);
+    await axios.delete('/api/upload', {
+      url: url,
+    }).then(() => {
+      toast.success("Image Remove");
+    });
     // await axios.post('/api/servers/deleteImage', {
     //   imageUrl: url,
     // }).then(() => {
