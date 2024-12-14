@@ -19,6 +19,7 @@ const CellImage = ({ data }: CellImageProps) => {
             src={url}
             alt="Product Image"
             fill
+            sizes="w-16"
             className="object-contain"
           />
         </div>

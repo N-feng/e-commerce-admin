@@ -12,7 +12,7 @@ export async function POST(
 
     const body = await req.json();
 
-    const { name, billboardId } = body;
+    const { name, billboardId, imageUrl } = body;
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
@@ -21,10 +21,14 @@ export async function POST(
     if (!name) {
       return new NextResponse("Name is required", { status: 400 });
     }
-    
-    if (!billboardId) {
-      return new NextResponse("Billboard ID is required", { status: 400 });
+
+    if (!imageUrl) {
+      return new NextResponse("Image URL is required", { status: 400 });
     }
+    
+    // if (!billboardId) {
+    //   return new NextResponse("Billboard ID is required", { status: 400 });
+    // }
 
     if (!params.storeId) {
       return new NextResponse("Store id is required", { status: 400 });
@@ -44,7 +48,8 @@ export async function POST(
     const category = await prismadb.category.create({
       data: {
         name,
-        billboardId,
+        // billboardId,
+        imageUrl,
         storeId: params.storeId,
       }
     });
@@ -68,6 +73,12 @@ export async function GET(
     const categories = await prismadb.category.findMany({
       where: {
         storeId: params.storeId
+      },
+      // include: {
+      //   billboard: true,
+      // },
+      orderBy: {
+        createdAt: 'desc'
       }
     });
   

@@ -34,7 +34,7 @@ import { Label } from "@/components/ui/label"
 const formSchema = z.object({
   name: z.string().min(1),
   chineseName: z.string().min(1),
-  images: z.object({ url: z.string() }).array(),
+  images: z.object({ url: z.string() }).array().min(1),
   price: z.coerce.number().min(1),
   qty: z.coerce.number().min(1),
   energyKcal: z.coerce.number().min(0),
@@ -105,7 +105,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   const [loading, setLoading] = useState(false);
 
   const title = initialData ? 'Edit product' : 'Create product';
-  console.log('initialData: ', initialData);
+  // console.log('initialData: ', initialData);
   const description = initialData ? 'Edit a product.' : 'Add a new product';
   const toastMessage = initialData ? 'Product updated.' : 'Product created.';
   const action = initialData ? 'Save changes' : 'Create';

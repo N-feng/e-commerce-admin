@@ -5,15 +5,27 @@ import { ColumnDef } from "@tanstack/react-table"
 import { CellAction } from "./cell-action"
 import { Button } from "@/components/ui/button"
 import { ArrowUpDown } from "lucide-react"
+import { CellImage } from "./cell-image"
 
 export type CategoryColumn = {
   id: string
   name: string;
-  billboardLabel: string;
+  // billboardLabel: string;
+  imageUrl: string;
   createdAt: string;
 }
 
 export const columns: ColumnDef<CategoryColumn>[] = [
+  {
+    accessorKey: "imageUrl",
+    header: "Image",
+    cell: ({row}) => {
+      const {imageUrl} = row.original
+      return (
+        <CellImage imageUrl={imageUrl} />
+      )
+    }
+  },
   {
     accessorKey: "name",
     // header: "Name",
@@ -29,22 +41,22 @@ export const columns: ColumnDef<CategoryColumn>[] = [
       )
     },
   },
-  {
-    accessorKey: "billboard",
-    // header: "Billboard",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Billboard
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-    cell: ({ row }) => row.original.billboardLabel,
-  },
+  // {
+  //   accessorKey: "billboard",
+  //   // header: "Billboard",
+  //   header: ({ column }) => {
+  //     return (
+  //       <Button
+  //         variant="ghost"
+  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //       >
+  //         Billboard
+  //         <ArrowUpDown className="ml-2 h-4 w-4" />
+  //       </Button>
+  //     )
+  //   },
+  //   cell: ({ row }) => row.original.billboardLabel,
+  // },
   {
     accessorKey: "createdAt",
     // header: "Date",

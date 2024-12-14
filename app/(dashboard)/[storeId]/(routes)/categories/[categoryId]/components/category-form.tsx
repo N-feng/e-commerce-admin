@@ -24,10 +24,12 @@ import { Separator } from "@/components/ui/separator"
 import { Heading } from "@/components/ui/heading"
 import { AlertModal } from "@/components/modals/alert-modal"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { MultiUploader } from "@/components/mulit-uploader"
 
 const formSchema = z.object({
   name: z.string().min(2),
-  billboardId: z.string().min(1),
+  // billboardId: z.string().min(1),
+  imageUrl: z.string().min(1),
 });
 
 type CategoryFormValues = z.infer<typeof formSchema>
@@ -56,7 +58,8 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
       name: '',
-      billboardId: '',
+      // billboardId: '',
+      imageUrl: '',
     }
   });
 
@@ -117,6 +120,31 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
       <Separator />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
+          <FormField
+              control={form.control}
+              name="imageUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Background image</FormLabel>
+                  <FormControl>
+                    {/* <ImageUpload 
+                      value={field.value ? [field.value] : []} 
+                      disabled={loading} 
+                      onChange={(url) => field.onChange(url)}
+                      onRemove={() => field.onChange('')}
+                    /> */}
+                    <MultiUploader 
+                      endpoint="imageUploader"
+                      value={field.value ? [field.value] : []} 
+                      disabled={loading} 
+                      onChange={(urls) => field.onChange(urls[0])}
+                      onRemove={(url) => field.onChange('')}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           <div className="md:grid md:grid-cols-3 gap-8">
             <FormField
               control={form.control}
@@ -131,7 +159,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name="billboardId"
               render={({ field }) => (
@@ -152,7 +180,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
           </div>
           <Button disabled={loading} className="ml-auto" type="submit">
             {action}
